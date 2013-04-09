@@ -10,7 +10,7 @@
 extern datetime WhenStart;
 
 #define HR2359      86340           // 24 * 3600
-#define BAR2359     1438
+#define ROUGH_BAR2359     1400
 
 string SymbolsArray[]={"EURUSDpro","USDJPYpro","EURJPYpro","GBPJPYpro","AUDJPYpro","NZDJPYpro"};
 
@@ -61,7 +61,7 @@ int start()
       iStart = iBarShift(symbolName,PERIOD_M1,WhenStart);
       iEnd = iBarShift(symbolName,PERIOD_M1,WhenStart+HR2359);
       
-      if((iStart - iEnd) < BAR2359){
+      if((iStart - iEnd) < ROUGH_BAR2359){
          Print("haha" + (iStart - iEnd));
          Print("Market data is not ready for "+ symbolName + " with date " + whenStr);
          continue;
