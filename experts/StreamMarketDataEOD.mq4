@@ -106,7 +106,7 @@ int start()
          continue;
       }
       
-      handle = FileOpen(symbolName + stringReplace(whenStr,".","_")+"TKOtime.csv",FILE_CSV|FILE_READ,',');
+      handle = FileOpen(fileName,FILE_CSV|FILE_READ,',');
  
       if(handle>=0){
          if(FileSize(handle) > FILE_SIZE_BYTES_CHECK){
@@ -116,7 +116,7 @@ int start()
          }
       }
 
-      handle = FileOpen(symbolName + stringReplace(whenStr,".","_")+"TKOtime.csv",FILE_CSV|FILE_WRITE,',');
+      handle = FileOpen(fileName,FILE_CSV|FILE_WRITE,',');
       
        for(int j = iStart; j >= iEnd; j--){
          FileWrite(handle,TimeToStr(iTime(symbolName,PERIOD_M1,j),TIME_DATE),TimeToStr(iTime(symbolName,PERIOD_M1,j),TIME_MINUTES),iOpen(symbolName,PERIOD_M1,j),
