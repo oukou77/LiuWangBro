@@ -10,10 +10,12 @@
 extern datetime WhenStart;
 
 #define HR2359      86340           // 24 * 3600
-#define ROUGH_BAR2359     1400
+#define HR0500      18000
+#define ROUGH_BAR2359     1000
+#define NYC_CLOSE 5
 
 string SymbolsArray[]={"EURUSDpro","USDJPYpro","EURJPYpro","GBPJPYpro","AUDJPYpro","NZDJPYpro"};
-
+//string SymbolsArray[] = {"USDJPYpro"};
 /**
 * search for the string needle in the string haystack and replace all
 * occurrecnes with replace.
@@ -46,8 +48,22 @@ int start()
   {
 
    Print("when is " + WhenStart);
-   if(WhenStart ==0) WhenStart = iTime(Symbol(),PERIOD_D1,1);
-
+   if(WhenStart ==0)
+   {
+      WhenStart = iTime(Symbol(),PERIOD_D1,1);
+      if(TimeHour(TimeCurrent())<=NYC_CLOSE){
+         Print("NYC is not closed yet");
+         return(-1);
+      }
+   }else{
+      if(WhenStart > TimeCurrent()){
+         Print("You put date in future");
+         return(-1);
+      }
+   }
+   
+   WhenStart += HR0500;
+   
    string whenStr = TimeToStr(WhenStart,TIME_DATE);
    int handle = -1;
    Print("when is " + stringReplace(whenStr,".","_"));
@@ -67,14 +83,14 @@ int start()
          continue;
       }
       
-      handle = FileOpen(symbolName + stringReplace(whenStr,".","_")+"onemindata.csv",FILE_CSV|FILE_WRITE,',');
+      handle = FileOpen(symbolName + stringReplace(whenStr,".","_")+"TKOtime.csv",FILE_CSV|FILE_WRITE,',');
       if(handle<0){
          Print("open file failed when handle" + symbolName + " with date " + whenStr);
          continue;
       }
       
       for(int j = iStart; j >= iEnd; j--){
-         FileWrite(handle,whenStr,TimeToStr(iTime(symbolName,PERIOD_M1,j),TIME_MINUTES),iOpen(symbolName,PERIOD_M1,j),
+         FileWrite(handle,TimeToStr(iTime(symbolName,PERIOD_M1,j),TIME_DATE),TimeToStr(iTime(symbolName,PERIOD_M1,j),TIME_MINUTES),iOpen(symbolName,PERIOD_M1,j),
          iHigh(symbolName,PERIOD_M1,j),iLow(symbolName,PERIOD_M1,j),iClose(symbolName,PERIOD_M1,j),iVolume(symbolName,PERIOD_M1,j));        
       }
       FileClose(handle);
