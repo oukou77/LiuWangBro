@@ -8,7 +8,7 @@
 
 #define HR2359      86340           // 24 * 3600
 #define HR0500      18000
-#define ROUGH_BAR2359     1000
+#define ROUGH_BAR2359     800
 #define NYC_CLOSE 5
 #define EOD_CHECK_START 5
 #define EOD_CHECK_END 6
@@ -76,10 +76,10 @@ string stringReplace(string haystack, string needle, string replace=""){
 //+------------------------------------------------------------------+
 int start()
   {
-//----
+   
+   //out of EOD processing time frame
    if(TimeHour(TimeCurrent()) < EOD_CHECK_START || TimeHour(TimeCurrent()) > EOD_CHECK_END){
-      Print("out of EOD processing timeframe");
-      return(-1);
+      return(0);
    }
   
    int startDate = iTime(Symbol(),PERIOD_D1,1);
@@ -93,7 +93,7 @@ int start()
    for(int i=0;i<ArraySize(SymbolsArray); i++){
       
       string symbolName = SymbolsArray[i];
-      string fileName = symbolName + stringReplace(whenStr,".","_")+"TKOtime.csv";
+      string fileName = symbolName + stringReplace(whenStr,".","_")+"TKO.csv";
       
       Print("Processing " + symbolName + "With " +  whenStr);
       
@@ -101,7 +101,6 @@ int start()
       iEnd = iBarShift(symbolName,PERIOD_M1,startTiming+HR2359);
       
       if((iStart - iEnd) < ROUGH_BAR2359){
-         Print("haha" + (iStart - iEnd));
          Print("Market data is not ready for "+ symbolName + " with date " + whenStr);
          continue;
       }
