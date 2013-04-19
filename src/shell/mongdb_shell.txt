@@ -10,3 +10,5 @@ http://blog.mongovue.com/downloads/
 http://api.mongodb.org/java/current/
 https://code.google.com/p/morphia/wiki/GettingStarted
 http://zhh2009.iteye.com/blog/606217
+
+mongod --repair --config C:\mongodb\mongod.cfg

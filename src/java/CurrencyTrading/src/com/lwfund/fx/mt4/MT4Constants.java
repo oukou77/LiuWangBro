@@ -2,6 +2,8 @@ package com.lwfund.fx.mt4;
 
 public class MT4Constants {
 	
+	private MT4Constants(){};
+	
 	public static final String TRADE_CLOSE_PRICE = "close price";
 	public static final String TRADE_CLOSE_TIME = "close time";
 	public static final String TRADE_COMMENT = "comment";
@@ -22,5 +24,9 @@ public class MT4Constants {
 	public static final String DEFAULT_DATE_FORMAT= "yyyy.MM.dd HH:mm";
 	public static final String DEFAULT_DATE_ZERO = "0";
 	
-	private MT4Constants(){};
+	public static final String TEMP_DB_SERVER_ADDRESS="127.0.0.1";
+	public static final int TEMP_DB_SERVER_PORT = 27017;
+	public static final String MONGODB_FX_DB_NAME = "CurrencyTrading";
+	public static final String MONGODB_FX_DB_COLLECTION_NAME = "TradesArchive";
+
 }
