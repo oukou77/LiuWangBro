@@ -78,7 +78,7 @@ int start()
                TimeToStr(OrderCloseTime()),
                OrderComment(),
                OrderCommission(),
-               OrderExpiration(),
+               TimeToStr(OrderExpiration()),
                OrderLots(),
                OrderMagicNumber(),
                OrderOpenPrice(),

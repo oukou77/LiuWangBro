@@ -1,0 +1,12 @@
+echo logpath=C:\MongoDB\log\mongo.log > C:\MongoDB\mongod.cfg
+echo logappend=true > C:\MongoDB\mongod.cfg
+
+C:\mongodb\bin\mongod.exe --config C:\mongodb\mongod.cfg --install
+
+C:\mongodb\bin\mongod.exe --dbpath C:\mongodb\data
+
+http://edgytech.com/umongo/
+http://blog.mongovue.com/downloads/
+http://api.mongodb.org/java/current/
+https://code.google.com/p/morphia/wiki/GettingStarted
+http://zhh2009.iteye.com/blog/606217
