@@ -23,6 +23,10 @@ public class MT4Trade extends ReflectionDBObject {
 	private float takeProfit;
 	private byte orderType;
 	
+	public float getRealProfit() {
+		return this.getProfit();
+	}
+	
 	public int getTicket() {
 		return ticket;
 	}
@@ -83,7 +87,7 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setOpenTime(Date openTime) {
 		this.openTime = openTime;
 	}
-	public float getProfit() {
+	public float getProfit(){
 		return profit;
 	}
 	public void setProfit(float profit) {
