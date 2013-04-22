@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.MT4Trade;
+import com.lwfund.fx.mt4.util.MT4Display;
 
 public class DrawdownCalculator implements MT4TradeCalculator {
 	private float initialDeposit = 0;
@@ -13,6 +14,8 @@ public class DrawdownCalculator implements MT4TradeCalculator {
 	private float absoluteDrawdown = 0;
 	private float maximumDrawdown = 0;
 	private float maximumDrawdownPercent = 0;
+	private float drawdown;
+	private float drawdownPercent =0;
 	private float relativeDrawdown = 0;
 	private float relativeDrawdownPercent = 0;
 	private float maximalPeak = 0;
@@ -25,19 +28,30 @@ public class DrawdownCalculator implements MT4TradeCalculator {
 			balance = initialDeposit;
 			maximalPeak = initialDeposit;
 			minimalPeak = initialDeposit;
+			absoluteDrawdown = initialDeposit;
 		}
 	}
 
 	@Override
 	public void process(MT4Trade trade) {
 		balance += trade.getRealProfit();
-		if(balance < initialDeposit && balance < absoluteDrawdown){
+		
+		if(balance < absoluteDrawdown){
 			absoluteDrawdown = balance;
 		}
+		
+		MT4Display.outToConsole(minimalPeak);
+		
 		if(minimalPeak > balance){
 			minimalPeak = balance;
-			maximumDrawdown = maximalPeak - minimalPeak;
-			maximumDrawdownPercent = maximumDrawdown/maximalPeak;
+			drawdown = maximalPeak - minimalPeak;
+			drawdownPercent = drawdown/maximalPeak;
+			if(maximumDrawdown < drawdown){
+				maximumDrawdown = drawdown;
+			}
+			if(maximumDrawdownPercent < drawdownPercent){
+				maximumDrawdownPercent = drawdownPercent;
+			}
 			if(maximumDrawdownPercent > relativeDrawdownPercent){
 				relativeDrawdownPercent = maximumDrawdownPercent;
 				relativeDrawdown = maximumDrawdown;
@@ -55,7 +69,7 @@ public class DrawdownCalculator implements MT4TradeCalculator {
 		Map<String, String> ret = new HashMap<String, String>();
 		DecimalFormat dfDefault  =  new DecimalFormat("0.00"); 
 		DecimalFormat dfPercent = new DecimalFormat("0.00%");
-		ret.put(MT4Constants.PERFORMANCE_RPT_ABSOLUTE_DRAWDOWN, dfDefault.format(absoluteDrawdown));
+		ret.put(MT4Constants.PERFORMANCE_RPT_ABSOLUTE_DRAWDOWN, dfDefault.format(Math.abs(initialDeposit-absoluteDrawdown)));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_DRAWDOWN, dfDefault.format(maximumDrawdown));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_DRAWDOWN_PERCENT, dfPercent.format(maximumDrawdownPercent));
 		ret.put(MT4Constants.PERFORMANCE_RPT_RELATIVE_DRAWDOWN, dfDefault.format(relativeDrawdown));

@@ -39,7 +39,11 @@ public class MT4HtmlRptToTradesTransformer {
 					currentTrade.setOrderType(MT4Constants.TRADE_ORDER_TYPE_BUY);
 				}else if(MT4Constants.HTML_RPT_SELL_VALUE.equals(type)){
 					currentTrade.setOrderType(MT4Constants.TRADE_ORDER_TYPE_SELL);
+				}else{
+					//pending orders
+					continue;
 				}
+				
 				currentTrade.setOpenTime(sdf.parse(record.get(MT4Constants.HTML_RPT_TIME)));
 				currentTrade.setLots(Float.parseFloat(record.get(MT4Constants.HTML_RPT_SIZE)));
 				currentTrade.setOpenPrice(Float.parseFloat(record.get(MT4Constants.HTML_RPT_PRICE)));

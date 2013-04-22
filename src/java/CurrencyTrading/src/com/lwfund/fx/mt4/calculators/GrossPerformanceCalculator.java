@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.MT4Trade;
+import com.lwfund.fx.mt4.util.MT4Display;
 
 public class GrossPerformanceCalculator implements MT4TradeCalculator {
 	private float grossProfit = 0;
@@ -65,12 +66,12 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 		
 		if(trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_BUY){
 			longTrades += 1;
-			if(trade.getRealProfit() > 0){
+			if(trade.getRealProfit() >= 0){
 				longProfitTrades += 1;
 			}
 		}else if(trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_SELL){
 			shortTrades += 1;
-			if(trade.getRealProfit() > 0){
+			if(trade.getRealProfit() >= 0){
 				shortProfitTrades += 1;
 			}
 		}
@@ -134,7 +135,7 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 				consecutiveLossesNumber += 1;
 				consecutiveLoss += trade.getRealProfit();
 				consecutiveLossesMoney += trade.getRealProfit();
-				if(maxConsecutiveLoss < consecutiveLoss){
+				if(maxConsecutiveLoss > consecutiveLoss){
 					maxConsecutiveLoss = consecutiveLoss;
 					maxConsecutiveLossNumber = consecutiveLossNumber;
 				}
@@ -190,31 +191,31 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 		Map<String,String> ret = new HashMap<String, String>();
 		DecimalFormat dfDefault  =  new DecimalFormat("0.00"); 
 		DecimalFormat dfPercent = new DecimalFormat("0.00%");
-		
+		MT4Display.outToConsole((float)profitTrades/totalTrades);
 		ret.put(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT, dfDefault.format(initialDeposit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_TOTAL_NET_PROFIT, dfDefault.format(balance-initialDeposit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_GROSS_PROFIT, dfDefault.format(grossProfit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_GROSS_LOSS, dfDefault.format(grossLoss));
-		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_FACTOR, dfDefault.format(grossProfit/grossLoss));
+		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_FACTOR, dfDefault.format(Math.abs((float)grossProfit/grossLoss)));
 		//Expected Payoff = (ProfitTrades / TotalTrades) * (GrossProfit / ProfitTrades) - 
         //(LossTrades / TotalTrades) * (GrossLoss / LossTrades)
-		float expectedPayoff = ((profitTrades/totalTrades) * (grossProfit/profitTrades)) - 
-								((lossTrades/totalTrades) * (grossLoss/lossTrades));
+		float expectedPayoff = ((float)profitTrades/(float)totalTrades) * (grossProfit/(float)profitTrades) - 
+								Math.abs(((float)lossTrades/(float)totalTrades) * (grossLoss/(float)lossTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_EXPECTED_PAYOFF, dfDefault.format(expectedPayoff));
 		
 		ret.put(MT4Constants.PERFORMANCE_RPT_TOTAL_TRADES, Integer.toString(totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES,Integer.toString(profitTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES_PERCENTAGE, dfPercent.format(profitTrades/totalTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES_PERCENTAGE, dfPercent.format((float)profitTrades/totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES, Integer.toString(lossTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES_PERCENTAGE, dfPercent.format(lossTrades/totalTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES_PERCENTAGE, dfPercent.format((float)lossTrades/totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS,Integer.toString(shortTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS_WON, dfPercent.format(shortProfitTrades/shortTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS_WON, dfPercent.format((float)shortProfitTrades/shortTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS, Integer.toString(longTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS_WON, dfPercent.format(longProfitTrades/longTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS_WON, dfPercent.format((float)longProfitTrades/longTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LARGEST_PROFIT_TRADE, dfDefault.format(largestProfit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LARGEST_LOSS_TRADE, dfDefault.format(largestLoss));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_PROFIT_TRADE, dfDefault.format(grossLoss/profitTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_LOSS_TRADE, dfDefault.format(grossLoss/lossTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_PROFIT_TRADE, dfDefault.format((float)grossProfit/profitTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_LOSS_TRADE, dfDefault.format((float)grossLoss/lossTrades));
 		
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_WINS,Integer.toString(maxConsecutiveWinNumber));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_WINS_MONEY, dfDefault.format(maxConsecutiveWinMoney));
@@ -225,8 +226,8 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_PROFIT_WINS, Integer.toString(maxConsecutiveProfitNumber));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_LOSS, dfDefault.format(maxConsecutiveLoss));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_LOSS_LOSSES, Integer.toString(maxConsecutiveLossNumber));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_WINS, dfDefault.format(totalConsecutiveWins/consecutiveWinsCounts));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_LOSSES, dfDefault.format(totalConsecutiveLosses/consecutiveLossesCounts));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_WINS, dfDefault.format((float)totalConsecutiveWins/consecutiveWinsCounts));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_LOSSES, dfDefault.format((float)totalConsecutiveLosses/consecutiveLossesCounts));
 		
 		return ret;
 	}

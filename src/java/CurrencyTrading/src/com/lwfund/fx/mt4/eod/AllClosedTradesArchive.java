@@ -27,8 +27,8 @@ public class AllClosedTradesArchive {
 	private DB mongoFXDB = null;
 	private static final DateFormat sdf = new SimpleDateFormat(
 			MT4Constants.DEFAULT_DATE_FORMAT);
-
-	public void retrieveTradesToBuffer(String fileName) throws Exception {
+	
+	public List<DBObject> retrieveTradesToBuffer(String fileName) throws Exception {
 
 		Iterable<CSVRecord> parser = CSVFormat.DEFAULT.toBuilder().withHeader()
 				.parse(new FileReader(fileName));
@@ -74,6 +74,8 @@ public class AllClosedTradesArchive {
 		}
 
 		MT4Display.outToConsole("loaded [" + trades.size() + "] trades......");
+		
+		return trades;
 	}
 
 	public void persistentTrades() {

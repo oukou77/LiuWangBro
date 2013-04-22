@@ -24,7 +24,14 @@ public class MT4Trade extends ReflectionDBObject {
 	private byte orderType = -1;
 	
 	public float getRealProfit() {
-		return this.getProfit();
+		float ret = profit;
+		if(commission < 0){
+			ret += commission;
+		}
+		if(swap < 0){
+			ret += swap;
+		}
+		return ret;
 	}
 	
 	public int getTicket() {
