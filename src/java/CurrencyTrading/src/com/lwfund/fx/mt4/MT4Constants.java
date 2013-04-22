@@ -32,6 +32,19 @@ public class MT4Constants {
 	public static final String DEFAULT_DATE_FORMAT= "yyyy.MM.dd HH:mm";
 	public static final String DEFAULT_DATE_ZERO = "0";
 	
+	public static final String HTML_RPT_ID = "#";
+	public static final String HTML_RPT_TIME = "Time";
+	public static final String HTML_RPT_TYPE = "Type";
+	public static final String HTML_RPT_ORDER = "Order";
+	public static final String HTML_RPT_SIZE = "Size";
+	public static final String HTML_RPT_PRICE = "Price";
+	public static final String HTML_RPT_STOPLOSS = "S / L";
+	public static final String HTML_RPT_TAKEPROFIT = "T / P";
+	public static final String HTML_RPT_PROFIT = "Profit";
+	public static final String HTML_RPT_BALANCE = "Balance";
+	public static final String HTML_RPT_BUY_VALUE = "buy";
+	public static final String HTML_RPT_SELL_VALUE = "sell";
+	
 	public static final String TEMP_DB_SERVER_ADDRESS="127.0.0.1";
 	public static final int TEMP_DB_SERVER_PORT = 27017;
 	public static final String MONGODB_FX_DB_NAME = "CurrencyTrading";
@@ -68,5 +81,10 @@ public class MT4Constants {
 	public static final String PERFORMANCE_RPT_MAX_CONSECUTIVE_LOSS_LOSSES = "MaximumConsecutiveLossLosses";
 	public static final String PERFORMANCE_RPT_AVG_CONSECUTIVE_WINS = "AverageConsecutiveWins";
 	public static final String PERFORMANCE_RPT_AVG_CONSECUTIVE_LOSSES = "AverageConsecutiveLosses";
-
+	public static final String PERFORMANCE_RPT_ABSOLUTE_DRAWDOWN = "AbsoluteDrawdown";
+	public static final String PERFORMANCE_RPT_MAX_DRAWDOWN = "MaximalDrawdown";
+	public static final String PERFORMANCE_RPT_MAX_DRAWDOWN_PERCENT = "MaximalDrawdownPercent";
+	public static final String PERFORMANCE_RPT_RELATIVE_DRAWDOWN = "RelativeDrawdown";
+	public static final String PERFORMANCE_RPT_RELATIVE_DRAWDOWN_PERCENT = "RelativeDrawdownPercent";
+	
 }

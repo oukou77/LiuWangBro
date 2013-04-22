@@ -1,0 +1,2 @@
+1.stream algo allocation
+2.stream algo equity curve

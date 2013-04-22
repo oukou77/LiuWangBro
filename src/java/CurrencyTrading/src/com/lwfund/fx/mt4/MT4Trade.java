@@ -21,7 +21,7 @@ public class MT4Trade extends ReflectionDBObject {
 	private float swap;
 	private String symbol;
 	private float takeProfit;
-	private byte orderType;
+	private byte orderType = -1;
 	
 	public float getRealProfit() {
 		return this.getProfit();
