@@ -69,7 +69,8 @@ public class AllClosedTradesArchive {
 					.get(MT4Constants.TRADE_TICKET)));
 			currentTrade.setOrderType(Byte.parseByte(record
 					.get(MT4Constants.TRADE_ORDER_TYPE)));
-
+			currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
+			
 			trades.add(currentTrade);
 		}
 
@@ -97,7 +98,7 @@ public class AllClosedTradesArchive {
 			}
 
 			DBCollection coll = this.mongoFXDB
-					.getCollection(MT4Constants.MONGODB_FX_DB_COLLECTION_NAME);
+					.getCollection(MT4Constants.MONGODB_FX_DB_TRADE_ARCHIVE_COLLECTION);
 			WriteResult wr = coll.insert(this.trades);
 
 			MT4Display.outToConsole("insert is done. [" + wr.getN()

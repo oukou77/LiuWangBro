@@ -28,6 +28,8 @@ public class MT4Constants {
 	public static final String TRADE_TAKE_PROFIT = "take profit";
 	public static final String TRADE_TICKET = "ticket";
 	public static final String TRADE_ORDER_TYPE = "order type";
+	public static final String TRADE_ACCOUNT_ID = "account id";
+	
 	public static final String DEFAULT_DATE_ZERO_CONVERT = "1970.01.01 00:00";
 	public static final String DEFAULT_DATE_FORMAT= "yyyy.MM.dd HH:mm";
 	public static final String DEFAULT_DATE_ZERO = "0";
@@ -48,7 +50,8 @@ public class MT4Constants {
 	public static final String TEMP_DB_SERVER_ADDRESS="127.0.0.1";
 	public static final int TEMP_DB_SERVER_PORT = 27017;
 	public static final String MONGODB_FX_DB_NAME = "CurrencyTrading";
-	public static final String MONGODB_FX_DB_COLLECTION_NAME = "TradesArchive";
+	public static final String MONGODB_FX_DB_TRADE_ARCHIVE_COLLECTION = "TradesArchive";
+	public static final String MONGODB_FX_DB_BROKER_ACCOUNT_COLLECTION = "BrokerAccounts";
 	
 	public static final String PERFORMANCE_RPT_PROFIT_EXPECTATION = "ProfitExpecation";
 	public static final String PERFORMANCE_RPT_PROFIT_STANDARD_DEVIATION = "ProfitStandardDeviation";

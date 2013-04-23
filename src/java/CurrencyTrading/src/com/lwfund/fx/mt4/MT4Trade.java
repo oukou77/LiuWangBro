@@ -5,7 +5,7 @@ import java.util.Date;
 import com.mongodb.ReflectionDBObject;
 
 public class MT4Trade extends ReflectionDBObject {
-
+	private String AccountID;
 	private int ticket;
 	private float closePrice;
 	private Date closeTime;
@@ -34,6 +34,14 @@ public class MT4Trade extends ReflectionDBObject {
 		return ret;
 	}
 	
+	public String getAccountID() {
+		return AccountID;
+	}
+
+	public void setAccountID(String accountID) {
+		AccountID = accountID;
+	}
+
 	public int getTicket() {
 		return ticket;
 	}

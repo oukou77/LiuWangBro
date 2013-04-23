@@ -1,2 +1,17 @@
 1.stream algo allocation
 2.stream algo equity curve
+
+equity curve
+latest 30days maximum drawdown
+profit factor 
+latest 30days trade volume
+sharpe ratio
+expected payoff
+volatility
+lots
+pair by pie chart
+avg pips
+
+latest 30days or year
+
+overall and per algo

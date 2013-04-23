@@ -69,7 +69,8 @@ int start()
             "symbol",
             "take profit",
             "ticket",
-            "order type");
+            "order type",
+            "account id");
             
    for(int i=0; i< OrdersHistoryTotal();i++){
       if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false) break;
@@ -89,7 +90,8 @@ int start()
                OrderSymbol(),
                OrderTakeProfit(),
                OrderTicket(),
-               OrderType());     
+               OrderType(),
+               AccountNumber());     
    }
    
    Print("done");
