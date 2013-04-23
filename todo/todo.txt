@@ -15,3 +15,13 @@ avg pips
 latest 30days or year
 
 overall and per algo
+
+1.build account balance EOD, from mt4 to java to Mongo
+2.build per algo balance 
+3.save algo collection with magic number
+4.build save latest X days performance calculator
+5.build sharpe ratio and Z ratio calculator
+6.trade filter
+7.create stats chart images
+8.bind to pdf file and send EOD report
+9.create real time calculators and chart within MT4
