@@ -13,9 +13,9 @@
 #define NYC_CLOSE_IN_TKO_TIME 5
 #define NYC_CLOSE_IN_LDN_TIME 21
 #define EOD_CHECK_START_IN_TKO_TIME 5
-#define EOD_CHECK_START_IN_LDN_TIME 11
+#define EOD_CHECK_START_IN_LDN_TIME 21
 #define EOD_CHECK_END_IN_TKO_TIME 6
-#define EOD_CHECK_END_IN_LDN_TIME 16
+#define EOD_CHECK_END_IN_LDN_TIME 22
 
 #define CUTOFF_FILE_SIZE_BYTES_CHECK 10
 #define MKT_DATA_FILE_SIZE_BYTES_CHECK 1000
@@ -127,6 +127,7 @@ void getCutOffFileNames(datetime currentTime,string& cutoffFileNames[]){
    cutoffFileNames[2] = cutoffDateStr + location + ".csv";
    cutoffFileNames[3] = "AccountInfoFor" + accountnumber + "As" + cutoffDateStr + ".csv";
    cutoffFileNames[4] = "TradesArchiveFor" + accountnumber + "As" + cutoffDateStr + ".csv";
+   cutoffFileNames[5] = TimeToStr(cutoffDate,TIME_DATE|TIME_SECONDS);
 }
 
 datetime defaultCutOffTime(datetime currentTime){
@@ -151,18 +152,16 @@ int start()
    datetime currentTime = TimeCurrent();
    
    if(!IsInEODPeriod(currentTime)){
-      Print("not in EOD process period");
       return(0);
    }
    
-   string cutoffFileNames[5];
+   string cutoffFileNames[6];
    getCutOffFileNames(currentTime,cutoffFileNames);
    
    int handle = -1;
    handle = FileOpen(cutoffFileNames[1],FILE_CSV|FILE_READ,',');
    if(handle>=0){
       if(FileSize(handle) > CUTOFF_FILE_SIZE_BYTES_CHECK){
-         Print("EOD already processed for " + cutoffFileNames[1]);
          FileClose(handle);
          return(0);
       }
@@ -227,8 +226,8 @@ int start()
    Print("Streaming out account information to " + cutoffFileNames[3]);
    FileWrite(handle,"account number", "account balance",
                      "account profit", "account equity", 
-                     "account free margin","account margin");
-   FileWrite(handle,AccountNumber(),AccountBalance(),AccountProfit(),AccountEquity(),AccountFreeMargin(),AccountMargin());
+                     "account free margin","account margin","eod date");
+   FileWrite(handle,AccountNumber(),AccountBalance(),AccountProfit(),AccountEquity(),AccountFreeMargin(),AccountMargin(),cutoffFileNames[5]);
    FileClose(handle);
    
    //Stream Trades Information
@@ -253,7 +252,7 @@ int start()
          "ticket",
          "order type",
          "account id",
-         "is closed");
+         "is closed","eod date");
          
    //first closed trades
    for(int m=0; m<OrdersHistoryTotal();m++){
@@ -265,7 +264,7 @@ int start()
                TimeToStr(OrderCloseTime()),
                OrderComment(),
                OrderCommission(),
-               OrderExpiration(),
+               TimeToStr(OrderExpiration()),
                OrderLots(),
                OrderMagicNumber(),
                OrderOpenPrice(),
@@ -277,7 +276,7 @@ int start()
                OrderTakeProfit(),
                OrderTicket(),
                OrderType(),
-               AccountNumber(),"1");          
+               AccountNumber(),"1",cutoffFileNames[5]);          
       }
    }
    
@@ -298,7 +297,7 @@ int start()
                sCloseTime,
                OrderComment(),
                OrderCommission(),
-               OrderExpiration(),
+               TimeToStr(OrderExpiration()),
                OrderLots(),
                OrderMagicNumber(),
                OrderOpenPrice(),
@@ -310,7 +309,7 @@ int start()
                OrderTakeProfit(),
                OrderTicket(),
                OrderType(),
-               AccountNumber(),"0");                
+               AccountNumber(),"0",cutoffFileNames[5]);                
       }
    }
    FileClose(handle);

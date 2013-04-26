@@ -1,4 +1,4 @@
-package com.lwfund.fx.mt4.mongodb;
+package com.lwfund.fx.mt4.dblayer;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -14,9 +14,36 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 
-public class BrokerAccountInfoSaver {
+public class BrokerAccountInfoAccessor {
+	
 	private Mongo mongoInstance = null;
 	private DB mongoFXDB = null;
+	
+	public List<MT4Account> getAccoutInfoList(){
+		List<MT4Account> accounts = new ArrayList<>();
+		MT4Account account1 = new MT4Account();
+		account1.setAccountID("120768");
+		account1.setBrokerName("ThinkForex");
+		account1.setInitialDeposit((float)999546.0);
+		account1.setLeverage(100);
+		account1.setLocation("LDN");
+		account1.setCcy("JPY");
+		account1.setTimeZone(MT4Constants.TIMEZONE_LONDON);
+		accounts.add(account1);
+		
+		MT4Account account2 = new MT4Account();
+		account2.setAccountID("10952720");
+		account2.setBrokerName("Forex.com");
+		account2.setInitialDeposit((float)1013394.0);
+		account2.setLeverage(25);
+		account2.setLocation("TKO");
+		account2.setCcy("JPY");
+		account2.setTimeZone(MT4Constants.TIMEZONE_TOKYO);
+		
+		accounts.add(account2);
+		
+		return accounts;
+	}
 	
 	public void persistentBrokerAccountInfo(List<DBObject> brokerAccounts){
 		if (brokerAccounts == null || brokerAccounts.size() == 0) {
@@ -47,6 +74,8 @@ public class BrokerAccountInfoSaver {
 			ex.printStackTrace();
 		} catch (MongoException ex) {
 			ex.printStackTrace();
+		} finally{
+			this.mongoInstance.close();
 		}
 	}
 	
@@ -58,19 +87,22 @@ public class BrokerAccountInfoSaver {
 		account1.setInitialDeposit((float)999546.0);
 		account1.setLeverage(100);
 		account1.setLocation("LDN");
-		
+		account1.setCcy("JPY");
+		account1.setTimeZone(MT4Constants.TIMEZONE_LONDON);
 		accounts.add(account1);
 		
 		MT4Account account2 = new MT4Account();
 		account2.setAccountID("10952720");
 		account2.setBrokerName("Forex.com");
-		account2.setInitialDeposit((float)1000000.0);
+		account2.setInitialDeposit((float)1013394.0);
 		account2.setLeverage(25);
 		account2.setLocation("TKO");
+		account2.setCcy("JPY");
+		account2.setTimeZone(MT4Constants.TIMEZONE_TOKYO);
 		
 		accounts.add(account2);
 		
-		BrokerAccountInfoSaver saver = new BrokerAccountInfoSaver();
+		BrokerAccountInfoAccessor saver = new BrokerAccountInfoAccessor();
 		saver.persistentBrokerAccountInfo(accounts);
 	}
 }

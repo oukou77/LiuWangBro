@@ -70,7 +70,8 @@ int start()
             "take profit",
             "ticket",
             "order type",
-            "account id");
+            "account id",
+            "is closed","eod date");
             
    for(int i=0; i< OrdersHistoryTotal();i++){
       if(OrderSelect(i,SELECT_BY_POS,MODE_HISTORY)==false) break;
@@ -91,7 +92,8 @@ int start()
                OrderTakeProfit(),
                OrderTicket(),
                OrderType(),
-               AccountNumber());     
+               AccountNumber(),
+               "1",TimeToStr(currentTime));     
    }
    
    Print("done");

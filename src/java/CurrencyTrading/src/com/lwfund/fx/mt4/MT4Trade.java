@@ -22,7 +22,30 @@ public class MT4Trade extends ReflectionDBObject {
 	private String symbol;
 	private float takeProfit;
 	private byte orderType = -1;
+	private boolean isClosed = false;
+	private Date eodDate;
+	private int _id;
 	
+	public Object get_id() {
+		return ticket;
+	}
+
+	public boolean isClosed() {
+		return isClosed;
+	}
+
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
+	}
+
+	public Date getEodDate() {
+		return eodDate;
+	}
+
+	public void setEodDate(Date eodDate) {
+		this.eodDate = eodDate;
+	}
+
 	public float getRealProfit() {
 		float ret = profit;
 		if(commission < 0){

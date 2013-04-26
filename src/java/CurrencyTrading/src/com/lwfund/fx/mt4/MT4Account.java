@@ -8,7 +8,21 @@ public class MT4Account extends ReflectionDBObject{
 	private String accountID;
 	private float initialDeposit;
 	private int leverage;
+	private String ccy;
+	private String timeZone;
 	
+	public String getCcy() {
+		return ccy;
+	}
+	public void setCcy(String ccy) {
+		this.ccy = ccy;
+	}
+	public String getTimeZone() {
+		return timeZone;
+	}
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
+	}
 	public String getBrokerName() {
 		return brokerName;
 	}

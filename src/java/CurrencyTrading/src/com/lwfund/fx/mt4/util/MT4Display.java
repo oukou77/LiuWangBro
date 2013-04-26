@@ -1,5 +1,7 @@
 package com.lwfund.fx.mt4.util;
 
+import java.util.TimeZone;
+
 public class MT4Display {
 	private MT4Display(){};
 	
@@ -13,5 +15,11 @@ public class MT4Display {
 	
 	public static void outToConsole(float number){
 		System.out.println(number);
+	}
+	
+	public static void main(String args[])throws Exception{
+		for (int i = 0; i < TimeZone.getAvailableIDs().length; i++) {
+			System.out.println(TimeZone.getAvailableIDs()[i]);
+		}
 	}
 }

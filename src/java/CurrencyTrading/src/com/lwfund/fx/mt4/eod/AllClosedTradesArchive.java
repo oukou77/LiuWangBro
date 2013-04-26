@@ -70,7 +70,12 @@ public class AllClosedTradesArchive {
 			currentTrade.setOrderType(Byte.parseByte(record
 					.get(MT4Constants.TRADE_ORDER_TYPE)));
 			currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
-			
+			if(MT4Constants.TRADE_IS_CLOSED_VALUE.equals(record.get(MT4Constants.TRADE_IS_CLOSED))){
+				currentTrade.setClosed(true);
+			}else{
+				currentTrade.setClosed(false);
+			}
+			currentTrade.setEodDate(sdf.parse(record.get(MT4Constants.TRADE_EOD_DATE)));
 			trades.add(currentTrade);
 		}
 
@@ -98,7 +103,7 @@ public class AllClosedTradesArchive {
 			}
 
 			DBCollection coll = this.mongoFXDB
-					.getCollection(MT4Constants.MONGODB_FX_DB_TRADE_ARCHIVE_COLLECTION);
+					.getCollection(MT4Constants.MONGODB_FX_DB_CLOSED_TRADE_ARCHIVE_COLLECTION);
 			WriteResult wr = coll.insert(this.trades);
 
 			MT4Display.outToConsole("insert is done. [" + wr.getN()
@@ -108,6 +113,8 @@ public class AllClosedTradesArchive {
 			ex.printStackTrace();
 		} catch (MongoException ex) {
 			ex.printStackTrace();
+		} finally{
+			this.mongoInstance.close();
 		}
 	}
 
