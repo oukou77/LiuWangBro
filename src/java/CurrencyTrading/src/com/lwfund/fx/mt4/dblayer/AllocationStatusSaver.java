@@ -43,7 +43,7 @@ public class AllocationStatusSaver {
 			return ret;
 
 		try {
-			if (this.mongoInstance == null) {
+			if ((this.mongoInstance == null) || (!this.mongoInstance.getConnector().isOpen())) {
 				this.mongoInstance = new Mongo(
 						MT4Constants.TEMP_DB_SERVER_ADDRESS,
 						MT4Constants.TEMP_DB_SERVER_PORT);
@@ -66,7 +66,8 @@ public class AllocationStatusSaver {
 			ex.printStackTrace();
 			throw ex;
 		} finally{
-			this.mongoInstance.close();
+//			this.mongoInstance.close();
+			this.mongoInstance = null;
 		}
 		MT4Display.outToConsole("insert is done. [" + ret + "] rows affected!");
 		return ret;
@@ -78,7 +79,7 @@ public class AllocationStatusSaver {
 					.withHeader().parse(new FileReader(fileName));
 
 			MT4Display.outToConsole("processing file[" + fileName + "]");
-			allocations = new ArrayList<>();
+			allocations = new ArrayList<DBObject>();
 
 			for (CSVRecord record : parser) {
 				MT4AllocationStatus allocation = new MT4AllocationStatus();

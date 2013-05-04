@@ -24,12 +24,22 @@ public class MT4Trade extends ReflectionDBObject {
 	private byte orderType = -1;
 	private boolean isClosed = false;
 	private Date eodDate;
-	private int _id;
+//	private int _id;
 	
 	public Object get_id() {
 		return ticket;
 	}
 
+	public String getAlgoID(){
+		String ret = null;
+		if(this.magicNumber != 0){
+			ret = Integer.toString(this.magicNumber);
+		}else{
+			ret = MT4Constants.ALLOCATION_NON_ALGO_FLAG;
+		}
+		return ret; 
+	}
+	
 	public boolean isClosed() {
 		return isClosed;
 	}

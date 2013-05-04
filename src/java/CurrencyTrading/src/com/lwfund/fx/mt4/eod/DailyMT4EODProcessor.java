@@ -51,14 +51,13 @@ public class DailyMT4EODProcessor {
 					accountAllocationStatusFileName.replaceAll("@", cutoffDateStr);
 			accountAllocationStatusFileName = args[0] + accountAllocationStatusFileName;
 			ass.parseAccountAllocationStatus(accountAllocationStatusFileName);
-//			ass.persitent();
+			ass.persitent();
 			String tradeArchiveFileName = 
 					MT4Constants.EOD_INPUT_FILE_TRADE_ARCHIVE.replaceAll("#", mt4Account.getAccountID());
 			tradeArchiveFileName = tradeArchiveFileName.replaceAll("@", cutoffDateStr);
 			tradeArchiveFileName = args[0] + tradeArchiveFileName;
 			tas.parseTrades(tradeArchiveFileName);
 			tas.persitent();
-			
 		}
 	}
 	

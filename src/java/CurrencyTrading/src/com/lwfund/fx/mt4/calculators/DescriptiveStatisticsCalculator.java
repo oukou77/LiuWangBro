@@ -32,7 +32,7 @@ public class DescriptiveStatisticsCalculator implements MT4TradeCalculator {
 
 	@Override
 	public Map<String, String> calculate() {
-		Map<String,String> ret = new HashMap<>();
+		Map<String,String> ret = new HashMap<String,String>();
 		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_EXPECTATION, Double.toString(profitStats.getMean()));
 		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_STANDARD_DEVIATION, Double.toString(profitStats.getStandardDeviation()));
 		return ret;

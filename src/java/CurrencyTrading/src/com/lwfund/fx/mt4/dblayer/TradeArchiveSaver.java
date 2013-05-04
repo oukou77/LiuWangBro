@@ -8,11 +8,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
+import com.lwfund.fx.mt4.MT4Account;
 import com.lwfund.fx.mt4.MT4Trade;
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.util.MT4Display;
@@ -77,7 +81,7 @@ public class TradeArchiveSaver {
 			ex.printStackTrace();
 			throw ex;
 		} finally{
-			this.mongoInstance.close();
+//			this.mongoInstance.close();
 		}
 		MT4Display.outToConsole("insert is done. [" + ret + "] rows affected!");
 		return ret;
@@ -89,11 +93,18 @@ public class TradeArchiveSaver {
 					.withHeader().parse(new FileReader(fileName));
 
 			MT4Display.outToConsole("processing file[" + fileName + "]");
-			trades = new ArrayList<>();
-
+			trades = new ArrayList<DBObject>();
+			List<MT4Account> accounts = BrokerAccountInfoAccessor.getAccoutInfoList();
+			Map<String,MT4Account> accountsMap = new HashMap<String, MT4Account>(); 
+			for (MT4Account mt4Account : accounts) {
+				accountsMap.put(mt4Account.getAccountID(), mt4Account);
+			}
+			
 			for (CSVRecord record : parser) {
 				MT4Trade currentTrade = new MT4Trade();
-
+				currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
+				sdf.setTimeZone(TimeZone.getTimeZone(accountsMap.get(currentTrade.getAccountID()).getTimeZone()));
+				
 				currentTrade.setClosePrice(Float.parseFloat(record
 						.get(MT4Constants.TRADE_CLOSE_PRICE)));
 				currentTrade.setCloseTime(sdf.parse(record
@@ -124,7 +135,7 @@ public class TradeArchiveSaver {
 						.get(MT4Constants.TRADE_TICKET)));
 				currentTrade.setOrderType(Byte.parseByte(record
 						.get(MT4Constants.TRADE_ORDER_TYPE)));
-				currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
+				
 				if(MT4Constants.TRADE_IS_CLOSED_VALUE.equals(record.get(MT4Constants.TRADE_IS_CLOSED))){
 					currentTrade.setClosed(true);
 				}else{

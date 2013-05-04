@@ -20,7 +20,7 @@ public class MT4HtmlRptToTradesTransformer {
 	private static 	final DateFormat sdf = new SimpleDateFormat(
 			MT4Constants.DEFAULT_DATE_FORMAT);
 	private Map<String, MT4Trade>orderKeyedTrades = new HashMap<String, MT4Trade>();
-	private List<MT4Trade> trades = new ArrayList<>();
+	private List<MT4Trade> trades = new ArrayList<MT4Trade>();
 	
 	public List<MT4Trade> pairUpTrades(String inputFileName) throws Exception{
 		Iterable<CSVRecord> parser = CSVFormat.DEFAULT.toBuilder().withHeader()

@@ -12,3 +12,8 @@ https://code.google.com/p/morphia/wiki/GettingStarted
 http://zhh2009.iteye.com/blog/606217
 
 mongod --repair --config C:\mongodb\mongod.cfg
+
+D:\mongodb\bin\mongod.exe --config D:\mongodb\mongod.cfg --install
+
+D:\MongoDB\mongovision-1.1-dev3>
+sincerity start restlet

@@ -15,6 +15,8 @@ public class MT4Constants {
 	public static final String EOD_INPUT_FILE_ACCOUNT_INFO = "AccountInfoFor#As@.csv";
 	public static final String EOD_INPUT_FILE_TRADE_ARCHIVE = "TradesArchiveFor#As@.csv";
 	public static final String EOD_INPUT_MKT_DATA = "#@TKOtime.csv";
+	public static final String EOD_FROM_DATE = "from date";
+	public static final String EOD_TO_DATE = "to date";
 	
 	public static final String ACCOUNT_ID = "account number";
 	public static final String ACCOUNT_BALANCE = "account balance";
@@ -23,6 +25,11 @@ public class MT4Constants {
 	public static final String ACCOUNT_FREE_MARGIN = "account free margin";
 	public static final String ACCOUNT_MARGIN = "account margin";
 	public static final String ALLOCATION_NON_ALGO_FLAG = "0";
+	public static final String ALGORITHM_ID = "algo id";
+	public static final String ALGORITHM_BALANCE = "algo balance";
+	public static final String ALGORITHM_EQUITY = "algo equity";
+	public static final String ALGORITHM_MARGIN = "algo margin";
+	public static final String ALGORITHM_FREE_MARGIN = "algo free margin";
 	
 	public static final String EOD_DATE = "eod date";
 	
@@ -73,7 +80,7 @@ public class MT4Constants {
 	public static final String MONGODB_FX_DB_NAME = "CurrencyTrading";
 	public static final String MONGODB_FX_DB_CLOSED_TRADE_ARCHIVE_COLLECTION = "ClosedTradesArchive";
 	public static final String MONGODB_FX_DB_OPEN_TRADE_ARCHIVE_COLLECTION = "OpenTradesArchive";
-	
+	public static final String MONGODB_FX_DB_ALGORITHMS_COLLECTION = "Algorithms";
 	public static final String MONGODB_FX_DB_BROKER_ACCOUNT_COLLECTION = "BrokerAccounts";
 	public static final String MONGODB_FX_DB_ALLOCATION_STATUS_COLLECTION ="AllocationStatus";
 	

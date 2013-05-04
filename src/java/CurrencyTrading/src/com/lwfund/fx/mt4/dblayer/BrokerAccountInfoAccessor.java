@@ -18,9 +18,13 @@ public class BrokerAccountInfoAccessor {
 	
 	private Mongo mongoInstance = null;
 	private DB mongoFXDB = null;
+	private static List<MT4Account> accounts = null;
 	
-	public List<MT4Account> getAccoutInfoList(){
-		List<MT4Account> accounts = new ArrayList<>();
+	public static List<MT4Account> getAccoutInfoList(){
+		if(accounts != null){
+			return accounts;
+		}
+		accounts = new ArrayList<MT4Account>();
 		MT4Account account1 = new MT4Account();
 		account1.setAccountID("120768");
 		account1.setBrokerName("ThinkForex");
@@ -80,7 +84,7 @@ public class BrokerAccountInfoAccessor {
 	}
 	
 	public static void main(String args[]) throws Exception{
-		List<DBObject> accounts = new ArrayList<>();
+		List<DBObject> accounts = new ArrayList<DBObject>();
 		MT4Account account1 = new MT4Account();
 		account1.setAccountID("120768");
 		account1.setBrokerName("ThinkForex");

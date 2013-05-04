@@ -5,13 +5,18 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
+import com.lwfund.fx.mt4.MT4Account;
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.MT4Trade;
+import com.lwfund.fx.mt4.dblayer.BrokerAccountInfoAccessor;
 import com.lwfund.fx.mt4.util.MT4Display;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -33,12 +38,21 @@ public class AllClosedTradesArchive {
 		Iterable<CSVRecord> parser = CSVFormat.DEFAULT.toBuilder().withHeader()
 				.parse(new FileReader(fileName));
 
-		trades = new ArrayList<>();
+		List<MT4Account> accounts = BrokerAccountInfoAccessor.getAccoutInfoList();
+		Map<String,MT4Account> accountsMap = new HashMap<String, MT4Account>(); 
+		for (MT4Account mt4Account : accounts) {
+			accountsMap.put(mt4Account.getAccountID(), mt4Account);
+		}
+		
+		trades = new ArrayList<DBObject>();
 
 		for (CSVRecord record : parser) {
 
 			MT4Trade currentTrade = new MT4Trade();
-
+			
+			currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
+			sdf.setTimeZone(TimeZone.getTimeZone(accountsMap.get(currentTrade.getAccountID()).getTimeZone()));
+			
 			currentTrade.setClosePrice(Float.parseFloat(record
 					.get(MT4Constants.TRADE_CLOSE_PRICE)));
 			currentTrade.setCloseTime(sdf.parse(record
@@ -69,7 +83,7 @@ public class AllClosedTradesArchive {
 					.get(MT4Constants.TRADE_TICKET)));
 			currentTrade.setOrderType(Byte.parseByte(record
 					.get(MT4Constants.TRADE_ORDER_TYPE)));
-			currentTrade.setAccountID(record.get(MT4Constants.TRADE_ACCOUNT_ID));
+			
 			if(MT4Constants.TRADE_IS_CLOSED_VALUE.equals(record.get(MT4Constants.TRADE_IS_CLOSED))){
 				currentTrade.setClosed(true);
 			}else{
@@ -114,7 +128,7 @@ public class AllClosedTradesArchive {
 		} catch (MongoException ex) {
 			ex.printStackTrace();
 		} finally{
-			this.mongoInstance.close();
+//			this.mongoInstance.close();
 		}
 	}
 
