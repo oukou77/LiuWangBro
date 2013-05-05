@@ -17,7 +17,9 @@ latest 30days or year
 overall and per algo
 
 1.build account balance EOD, from mt4 to java to Mongo
+	a.build backward fill in the account balance, margin. 
 2.build per algo balance 
+	a.build per algo euqity curve. backward fill in the equity per algo.
 3.save algo collection with magic number
 4.build save latest X days performance calculator
 5.build sharpe ratio and Z ratio calculator
