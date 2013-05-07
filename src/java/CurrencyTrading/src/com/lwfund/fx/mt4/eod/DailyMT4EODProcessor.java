@@ -8,7 +8,7 @@ import java.util.TimeZone;
 
 import com.lwfund.fx.mt4.MT4Account;
 import com.lwfund.fx.mt4.MT4Constants;
-import com.lwfund.fx.mt4.dblayer.AllocationStatusSaver;
+import com.lwfund.fx.mt4.dblayer.AllocationStatusAccessor;
 import com.lwfund.fx.mt4.dblayer.BrokerAccountInfoAccessor;
 import com.lwfund.fx.mt4.dblayer.TradeArchiveSaver;
 import com.lwfund.fx.mt4.util.MT4Display;
@@ -24,24 +24,24 @@ public class DailyMT4EODProcessor {
 		if('\\' != args[0].charAt(args[0].length()-1)){
 			args[0] += "\\";
 		}
+		
 		System.out.println(args[0]);
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(MT4Constants.TIMEZONE_TOKYO));
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(MT4Constants.TIMEZONE_HONGKONG));
 		
 		System.out.println(cal.getTime());
 		
 		//Monday needs to adjust to Sat's EOD
-//		if(2 == cal.get(Calendar.DAY_OF_WEEK)){
-//			cal.add(Calendar.DAY_OF_MONTH, -2);
-//		}else{
-//			cal.add(Calendar.DAY_OF_MONTH, -1);
-//		}
+		if(2 == cal.get(Calendar.DAY_OF_WEEK)){
+			cal.add(Calendar.DAY_OF_MONTH, -2);
+		}else{
+			cal.add(Calendar.DAY_OF_MONTH, -1);
+		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
 		String cutoffDateStr = sdf.format(cal.getTime());
-		
-		BrokerAccountInfoAccessor baia = new BrokerAccountInfoAccessor();
-		List<MT4Account> accountList = baia.getAccoutInfoList();
-		AllocationStatusSaver ass = new AllocationStatusSaver();
+
+		List<MT4Account> accountList = BrokerAccountInfoAccessor.getAccoutInfoList();
+		AllocationStatusAccessor ass = new AllocationStatusAccessor();
 		TradeArchiveSaver tas = new TradeArchiveSaver();
 		
 		for (MT4Account mt4Account : accountList) {

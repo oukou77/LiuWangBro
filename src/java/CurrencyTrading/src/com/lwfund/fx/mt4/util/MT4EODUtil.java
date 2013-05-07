@@ -17,9 +17,9 @@ public class MT4EODUtil {
 	public static Map<String, Date>getEODDateRange(Date aDate){
 		Map<String, Date> ret = new HashMap<String, Date>();
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeZone(TimeZone.getTimeZone(MT4Constants.TIMEZONE_TOKYO));
+		cal.setTimeZone(TimeZone.getTimeZone(MT4Constants.TIMEZONE_HONGKONG));
 		cal.setTime(aDate);
-		cal.set(Calendar.HOUR_OF_DAY, 5);
+		cal.set(Calendar.HOUR_OF_DAY, 4);
 		cal.set(Calendar.MINUTE,0);
 		cal.set(Calendar.SECOND,0);
 		ret.put(MT4Constants.EOD_FROM_DATE, cal.getTime());
@@ -32,6 +32,7 @@ public class MT4EODUtil {
 	
 	public static Map<String, Date>getEODDateRange(String aDateStr) throws ParseException{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd");
+		sdf.setTimeZone(TimeZone.getTimeZone(MT4Constants.TIMEZONE_HONGKONG));
 		Date aDate = sdf.parse(aDateStr);
 		return MT4EODUtil.getEODDateRange(aDate);
 	}

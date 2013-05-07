@@ -7,25 +7,24 @@ import com.mongodb.ReflectionDBObject;
 public class MT4Trade extends ReflectionDBObject {
 	private String AccountID;
 	private int ticket;
-	private float closePrice;
+	private double closePrice;
 	private Date closeTime;
 	private String comment;
-	private float commission;
+	private double commission;
 	private Date expiration;
-	private float lots;
+	private double lots;
 	private int magicNumber;
-	private float openPrice;
+	private double openPrice;
 	private Date openTime;
-	private float profit;
-	private float stopLoss;
-	private float swap;
+	private double profit;
+	private double stopLoss;
+	private double swap;
 	private String symbol;
-	private float takeProfit;
-	private byte orderType = -1;
+	private double takeProfit;
+	private int orderType = -1;
 	private boolean isClosed = false;
 	private Date eodDate;
-//	private int _id;
-	
+
 	public Object get_id() {
 		return ticket;
 	}
@@ -43,7 +42,7 @@ public class MT4Trade extends ReflectionDBObject {
 	public boolean isClosed() {
 		return isClosed;
 	}
-
+	
 	public void setClosed(boolean isClosed) {
 		this.isClosed = isClosed;
 	}
@@ -56,8 +55,8 @@ public class MT4Trade extends ReflectionDBObject {
 		this.eodDate = eodDate;
 	}
 
-	public float getRealProfit() {
-		float ret = profit;
+	public double getRealProfit() {
+		double ret = profit;
 		if(commission < 0){
 			ret += commission;
 		}
@@ -81,10 +80,10 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setTicket(int ticket) {
 		this.ticket = ticket;
 	}
-	public float getClosePrice() {
+	public double getClosePrice() {
 		return closePrice;
 	}
-	public void setClosePrice(float closePrice) {
+	public void setClosePrice(double closePrice) {
 		this.closePrice = closePrice;
 	}
 	public Date getCloseTime() {
@@ -99,10 +98,10 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public float getCommission() {
+	public double getCommission() {
 		return commission;
 	}
-	public void setCommission(float commission) {
+	public void setCommission(double commission) {
 		this.commission = commission;
 	}
 	public Date getExpiration() {
@@ -111,10 +110,10 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
 	}
-	public float getLots() {
+	public double getLots() {
 		return lots;
 	}
-	public void setLots(float lots) {
+	public void setLots(double lots) {
 		this.lots = lots;
 	}
 	public int getMagicNumber() {
@@ -123,10 +122,10 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setMagicNumber(int magicNumber) {
 		this.magicNumber = magicNumber;
 	}
-	public float getOpenPrice() {
+	public double getOpenPrice() {
 		return openPrice;
 	}
-	public void setOpenPrice(float openPrice) {
+	public void setOpenPrice(double openPrice) {
 		this.openPrice = openPrice;
 	}
 	public Date getOpenTime() {
@@ -135,22 +134,22 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setOpenTime(Date openTime) {
 		this.openTime = openTime;
 	}
-	public float getProfit(){
+	public double getProfit(){
 		return profit;
 	}
-	public void setProfit(float profit) {
+	public void setProfit(double profit) {
 		this.profit = profit;
 	}
-	public float getStopLoss() {
+	public double getStopLoss() {
 		return stopLoss;
 	}
-	public void setStopLoss(float stopLoss) {
+	public void setStopLoss(double stopLoss) {
 		this.stopLoss = stopLoss;
 	}
-	public float getSwap() {
+	public double getSwap() {
 		return swap;
 	}
-	public void setSwap(float swap) {
+	public void setSwap(double swap) {
 		this.swap = swap;
 	}
 	public String getSymbol() {
@@ -159,16 +158,16 @@ public class MT4Trade extends ReflectionDBObject {
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-	public float getTakeProfit() {
+	public double getTakeProfit() {
 		return takeProfit;
 	}
-	public void setTakeProfit(float takeProfit) {
+	public void setTakeProfit(double takeProfit) {
 		this.takeProfit = takeProfit;
 	}
-	public byte getOrderType() {
+	public int getOrderType() {
 		return orderType;
 	}
-	public void setOrderType(byte orderType) {
+	public void setOrderType(int orderType) {
 		this.orderType = orderType;
 	}
 }

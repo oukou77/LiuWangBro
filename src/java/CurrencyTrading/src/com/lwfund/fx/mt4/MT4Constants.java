@@ -25,13 +25,16 @@ public class MT4Constants {
 	public static final String ACCOUNT_FREE_MARGIN = "account free margin";
 	public static final String ACCOUNT_MARGIN = "account margin";
 	public static final String ALLOCATION_NON_ALGO_FLAG = "0";
+	public static final String ALLOCATION_NON_ACCOUNT_FLAG = "0";
 	public static final String ALGORITHM_ID = "algo id";
+	public static final String ALGORITHM_ID_IN_MONGO = "AlgoID";
 	public static final String ALGORITHM_BALANCE = "algo balance";
 	public static final String ALGORITHM_EQUITY = "algo equity";
 	public static final String ALGORITHM_MARGIN = "algo margin";
 	public static final String ALGORITHM_FREE_MARGIN = "algo free margin";
 	
 	public static final String EOD_DATE = "eod date";
+	public static final String EOD_DATE_IN_MONGO = "EodDate";
 	
 	public static final String TIMEZONE_LONDON = "Europe/London";
 	public static final String TIMEZONE_TOKYO = "Asia/Tokyo";
@@ -39,6 +42,7 @@ public class MT4Constants {
 	
 	public static final String TRADE_CLOSE_PRICE = "close price";
 	public static final String TRADE_CLOSE_TIME = "close time";
+	public static final String TRADE_CLOSE_TIME_IN_MONGO = "CloseTime";
 	public static final String TRADE_COMMENT = "comment";
 	public static final String TRADE_COMMISSION = "commission";
 	public static final String TRADE_EXPIRATION = "expiration";

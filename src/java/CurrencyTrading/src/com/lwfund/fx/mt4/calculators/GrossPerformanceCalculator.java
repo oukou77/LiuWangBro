@@ -9,38 +9,38 @@ import com.lwfund.fx.mt4.MT4Trade;
 import com.lwfund.fx.mt4.util.MT4Display;
 
 public class GrossPerformanceCalculator implements MT4TradeCalculator {
-	private float grossProfit = 0;
-	private float grossLoss = 0;
-	private float initialDeposit = 0;
-	private float minimalBalance = 0;
-	private float balance = 0;
+	private double grossProfit = 0;
+	private double grossLoss = 0;
+	private double initialDeposit = 0;
+	private double minimalBalance = 0;
+	private double balance = 0;
 	
 	private int totalTrades = 0;
 	private int profitTrades = 0;
 	private int lossTrades = 0;
-	private float largestProfit = 0;
-	private float largestLoss = 0;
+	private double largestProfit = 0;
+	private double largestLoss = 0;
 	private int longTrades = 0;
 	private int shortTrades = 0;
 	private int longProfitTrades = 0;
 	private int shortProfitTrades = 0;
 	
 	private int maxConsecutiveWinNumber = 0;
-	private float maxConsecutiveWinMoney = 0;
+	private double maxConsecutiveWinMoney = 0;
 	private int maxConsecutiveLossesNumber = 0;
-	private float maxConsecutiveLossesMoney =0;
+	private double maxConsecutiveLossesMoney =0;
 	private int consecutiveWinNumber = 0;
 	private int consecutiveLossesNumber = 0;
-	private float consecutiveWinMoney = 0;
-	private float consecutiveLossesMoney =0;
+	private double consecutiveWinMoney = 0;
+	private double consecutiveLossesMoney =0;
 	
-	private float consecutiveProfit = 0;
-	private float consecutiveLoss = 0;
+	private double consecutiveProfit = 0;
+	private double consecutiveLoss = 0;
 	private int consecutiveProfitNumber = 0;
 	private int consecutiveLossNumber = 0;
-	private float maxConsecutiveProfit = 0;
+	private double maxConsecutiveProfit = 0;
 	private int maxConsecutiveProfitNumber = 0;
-	private float maxConsecutiveLoss = 0;
+	private double maxConsecutiveLoss = 0;
 	private int maxConsecutiveLossNumber = 0;
 	
 	private int consecutiveWinsCounts = 0;
@@ -53,7 +53,7 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 	
 	public void init(Map<String,String> parameters){
 		if(parameters.containsKey(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT)){
-			initialDeposit = Float.parseFloat(parameters.get(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT));
+			initialDeposit = Double.parseDouble(parameters.get(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT));
 			balance = initialDeposit;
 		}
 	}
@@ -191,31 +191,31 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 		Map<String,String> ret = new HashMap<String, String>();
 		DecimalFormat dfDefault  =  new DecimalFormat("0.00"); 
 		DecimalFormat dfPercent = new DecimalFormat("0.00%");
-		MT4Display.outToConsole((float)profitTrades/totalTrades);
+		MT4Display.outToConsole((double)profitTrades/totalTrades);
 		ret.put(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT, dfDefault.format(initialDeposit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_TOTAL_NET_PROFIT, dfDefault.format(balance-initialDeposit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_GROSS_PROFIT, dfDefault.format(grossProfit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_GROSS_LOSS, dfDefault.format(grossLoss));
-		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_FACTOR, dfDefault.format(Math.abs((float)grossProfit/grossLoss)));
+		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_FACTOR, dfDefault.format(Math.abs((double)grossProfit/grossLoss)));
 		//Expected Payoff = (ProfitTrades / TotalTrades) * (GrossProfit / ProfitTrades) - 
         //(LossTrades / TotalTrades) * (GrossLoss / LossTrades)
-		float expectedPayoff = ((float)profitTrades/(float)totalTrades) * (grossProfit/(float)profitTrades) - 
-								Math.abs(((float)lossTrades/(float)totalTrades) * (grossLoss/(float)lossTrades));
+		double expectedPayoff = ((double)profitTrades/(double)totalTrades) * (grossProfit/(double)profitTrades) - 
+								Math.abs(((double)lossTrades/(double)totalTrades) * (grossLoss/(double)lossTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_EXPECTED_PAYOFF, dfDefault.format(expectedPayoff));
 		
 		ret.put(MT4Constants.PERFORMANCE_RPT_TOTAL_TRADES, Integer.toString(totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES,Integer.toString(profitTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES_PERCENTAGE, dfPercent.format((float)profitTrades/totalTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_PROFIT_TRADES_PERCENTAGE, dfPercent.format((double)profitTrades/totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES, Integer.toString(lossTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES_PERCENTAGE, dfPercent.format((float)lossTrades/totalTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_LOSS_TRADES_PERCENTAGE, dfPercent.format((double)lossTrades/totalTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS,Integer.toString(shortTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS_WON, dfPercent.format((float)shortProfitTrades/shortTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_SHORT_POSITIONS_WON, dfPercent.format((double)shortProfitTrades/shortTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS, Integer.toString(longTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS_WON, dfPercent.format((float)longProfitTrades/longTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_LONG_POSITIONS_WON, dfPercent.format((double)longProfitTrades/longTrades));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LARGEST_PROFIT_TRADE, dfDefault.format(largestProfit));
 		ret.put(MT4Constants.PERFORMANCE_RPT_LARGEST_LOSS_TRADE, dfDefault.format(largestLoss));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_PROFIT_TRADE, dfDefault.format((float)grossProfit/profitTrades));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_LOSS_TRADE, dfDefault.format((float)grossLoss/lossTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_PROFIT_TRADE, dfDefault.format((double)grossProfit/profitTrades));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_LOSS_TRADE, dfDefault.format((double)grossLoss/lossTrades));
 		
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_WINS,Integer.toString(maxConsecutiveWinNumber));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_WINS_MONEY, dfDefault.format(maxConsecutiveWinMoney));
@@ -226,19 +226,19 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_PROFIT_WINS, Integer.toString(maxConsecutiveProfitNumber));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_LOSS, dfDefault.format(maxConsecutiveLoss));
 		ret.put(MT4Constants.PERFORMANCE_RPT_MAX_CONSECUTIVE_LOSS_LOSSES, Integer.toString(maxConsecutiveLossNumber));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_WINS, dfDefault.format((float)totalConsecutiveWins/consecutiveWinsCounts));
-		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_LOSSES, dfDefault.format((float)totalConsecutiveLosses/consecutiveLossesCounts));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_WINS, dfDefault.format((double)totalConsecutiveWins/consecutiveWinsCounts));
+		ret.put(MT4Constants.PERFORMANCE_RPT_AVG_CONSECUTIVE_LOSSES, dfDefault.format((double)totalConsecutiveLosses/consecutiveLossesCounts));
 		
 		return ret;
 	}
 
 	public static void main(String[] args) throws Exception{
-		float x = (float)6665.12345;
+		double x = (double)6665.12345;
 		System.out.println(x);
 		DecimalFormat  dfDefault  =  new  DecimalFormat("0.00");
 		System.out.println(dfDefault.format(x));
 		
-		float y = (float)0.7784;
+		double y = (double)0.7784;
 		DecimalFormat dfPercent = new DecimalFormat("0.00%");
 		System.out.println(dfPercent.format(y));
 	}

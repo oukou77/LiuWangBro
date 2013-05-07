@@ -13,10 +13,10 @@ public class MT4Display {
 		System.out.println(number);
 	}
 	
-	public static void outToConsole(float number){
+	public static void outToConsole(double number){
 		System.out.println(number);
 	}
-	
+
 	public static void main(String args[])throws Exception{
 		for (int i = 0; i < TimeZone.getAvailableIDs().length; i++) {
 			System.out.println(TimeZone.getAvailableIDs()[i]);
