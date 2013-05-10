@@ -85,11 +85,11 @@ extern string gInstance = "default";
 // The following definitions are in PIPS
 extern int gAlertOffset = 10;
 extern int gEtrOffset = 100; 
-extern int gSL1 = 300;
+extern int gSL1 = 400;
 extern int gSL2 = 300;
-extern int gTP1 = 300;
+extern int gTP1 = 1000;
 extern int gTP2 = 1400;
-extern int gTS1 = 100;
+extern int gTS1 = 400;
 extern int gTS2 = 300;
 extern double eRiskPerTrade = 0.02;
 extern double eStopLossBase = 0.5;
@@ -113,18 +113,22 @@ int gBoxLowMinuteInJST = 0;
 //
 //  GLOBAL Variables
 //
-double gNYHigh = 0;
-double gNYLow  = 0;
-double gNYRange = 0; // in PIPS
+double gNYBoxHigh = 0;
+double gNYBoxLow  = 0;
+double gNYBoxRange = 0; // in PIPS
+double gPrevNYBoxHigh = 0;
+double gPrevNYBoxLow = 0;
+double gPrevNYBoxRange = 0; // in PIPS
+
 double gDrLimit = 200; // daily range limit  in pips
 double gMinBoxRange = 200; // we dont do revert if box is too small
 
 double gBalance = 300000;//How much left in the account
 double gValue = 1000; // 1 lot * 1 pips for ***USD
 
-bool hasStartToRecord = false;
-bool hasDumpTodayRange = false;
-bool hasTradedForTheDay = false;
+bool gHasStartToRecord = false;
+bool gHasDumpTodayRange = false;
+bool gHasTradedForTheDay = false;
 
 bool gBuyFlag  = false;
 bool gSellFlag = false;
@@ -157,7 +161,6 @@ int gOdrTkt2 = 0;
 
 int gTktBuyOdr = 0; 
 int gTktSellOdr = 0; 
-
 
 int gLogFileHandle = 0;// Uninitialized
 string gLogFileName = "";
@@ -202,6 +205,32 @@ void test_serverTime()
    Print("currMinInGMT : " + currMinInGMT);
 }
 
+void performTrailingStop()
+{
+   if( gTktBuyOdr != 0)
+   {
+      //if( Close[0] < (gPrevNYBoxHigh - gAlertOffset*Point))
+      //{
+      //   aceOrderCloseBySide(true, false, MAGIC);
+      //}
+      //else
+      {
+         aceTrailingStopByPoint(MAGIC, gTS1);
+      }
+   }
+   if(gTktSellOdr != 0)
+   {
+      //if( Close[0] < (gPrevNYBoxLow + gAlertOffset*Point))
+      //{
+      //   aceOrderCloseBySide(false, true, MAGIC);
+      //}
+      //else
+      {
+         aceTrailingStopByPoint(MAGIC, gTS1);
+      }
+   }
+}
+
 int start()
 {  
    // No Entry if it is box time 
@@ -209,7 +238,8 @@ int start()
    int currHourInGMT = TimeHour(TimeCurrent());
 	int currMinInGMT = TimeMinute(TimeCurrent());
 	bool hasBoxRangeUpdate = false;	
-	bool goodToEntry = false;
+	bool goodToEntryLong = false;
+	bool goodToEntryShort = false;
 	double entryPrice = 0;	
 	
 	double currLongPos = aceCurrentOrders(MY_BUYPOS, MAGIC);
@@ -221,49 +251,41 @@ int start()
 	if( currShortPos == 0 && gTktSellOdr !=0 )
 	{
 	  gTktSellOdr = 0;
-	}
-	//aceLog(gLogFileName, "currHourInGMT: " + currHourInGMT, gDoPrint, gDoLog);
+	}	
 	
-	if ( currHourInGMT < gStartHourInJST && currHourInGMT > 1)
+	if ( currHourInGMT < gStartHourInJST && currHourInGMT > 6)
 	{
 	  //ok, before N.Y Box time, like tokyo 
 	  //Print("before N.Y Box time : " + currHourInGMT);
-	  hasStartToRecord = false;
-	  hasTradedForTheDay = false;
-	  if(gTktBuyOdr != 0)
-     {
-      aceTrailingStopByPoint(MAGIC, gTS1);
-     }
-     if(gTktSellOdr != 0)
-     {
-         aceTrailingStopByPoint(MAGIC, gTS1);
-     }
+	  gHasStartToRecord = false;
+	  gHasTradedForTheDay = false;
+	  performTrailingStop();
 	  return (0);
 	}
 	else if( currHourInGMT >= gStartHourInJST && currHourInGMT < gEndHourInJST )
 	{	  
 	  // OK, NY Box Time, no break out trade.
-	  if (hasStartToRecord == false)
+	  if ( gHasStartToRecord == false)
 	  {
-	     hasStartToRecord = true;
-	     gNYHigh = 0;
-	     gNYLow = 10000;// fake value, which is high enough to trigger update.
+	     gHasStartToRecord = true;
+	     gNYBoxHigh = 0;
+	     gNYBoxLow = 10000;// fake value, which is high enough to trigger update.
 	  }
 	  //Print("Box Time, recording NY High/low and take some rest...");
 	  gEtrBreakBars = currHourInGMT - gStartHourInJST + 1;
-	  if( gNYHigh < High[0] )
+	  if( gNYBoxHigh < High[0] )
 	  {
-	     gNYHigh = High[0];
-	     gNYRange = (gNYHigh - gNYLow)/Point;
+	     gNYBoxHigh = High[0];
+	     gNYBoxRange = (gNYBoxHigh - gNYBoxLow)/Point;
 	     gBoxHighHourInJST = currHourInGMT;
 	     gBoxHighMinuteInJST = currMinInGMT;
 	     hasBoxRangeUpdate = true;
 	  }
 	  
-	  if( gNYLow > Low[0] )
+	  if( gNYBoxLow > Low[0] )
 	  {
-	     gNYLow = Low[0];	     
-	     gNYRange = (gNYHigh - gNYLow)/Point;
+	     gNYBoxLow = Low[0];	     
+	     gNYBoxRange = (gNYBoxHigh - gNYBoxLow)/Point;
 	     gBoxLowHourInJST = currHourInGMT;
 	     gBoxLowMinuteInJST = currMinInGMT;
 	     hasBoxRangeUpdate = true;
@@ -274,56 +296,52 @@ int start()
 	  
      if( hasBoxRangeUpdate)
      {
-         string status = "["+gBoxHighHourInJST+":"+gBoxHighMinuteInJST+"]" + gNYHigh + 
-                         "["+gBoxLowHourInJST+":"+gBoxLowMinuteInJST+"]" + gNYLow ;
+         string status = "["+gBoxHighHourInJST+":"+gBoxHighMinuteInJST+"]" + gNYBoxHigh + 
+                         "["+gBoxLowHourInJST+":"+gBoxLowMinuteInJST+"]" + gNYBoxLow ;
          //Print(status);
      }     
-     if(gTktBuyOdr != 0)
-     {
-      aceTrailingStopByPoint(MAGIC, gTS1);
-     }
-     if(gTktSellOdr != 0)
-     {
-         aceTrailingStopByPoint(MAGIC, gTS1);
-     }
+     performTrailingStop();
      return ;
    }
    else
    {      
       //Print("After N.Y Box time : " + currHourInGMT);
-      if( hasStartToRecord == false)
+      if( gHasStartToRecord == false)
       {
          return(0);         
       }
-      if( hasDumpTodayRange == false)
+      if( gHasDumpTodayRange == false)
       {
-         string statusFinal = "["+gBoxHighHourInJST+":"+gBoxHighMinuteInJST+"]" + gNYHigh + 
-                           " ["+gBoxLowHourInJST+":"+gBoxLowMinuteInJST+"]" + gNYLow +
-                           " ["+gNYRange+"]";
+         string statusFinal = "["+gBoxHighHourInJST+":"+gBoxHighMinuteInJST+"]" + gNYBoxHigh + 
+                           " ["+gBoxLowHourInJST+":"+gBoxLowMinuteInJST+"]" + gNYBoxLow +
+                           " ["+gNYBoxRange+"]";
          aceLog(gLogFileName, statusFinal, gDoPrint, gDoLog);
-         hasDumpTodayRange = true;
+         gHasDumpTodayRange = true;
+         gPrevNYBoxHigh = gNYBoxHigh;
+         gPrevNYBoxLow = gNYBoxLow;
+         gPrevNYBoxRange = gNYBoxRange;
       }
    }
    
-   if( Close[1] >= (gNYHigh + gAlertOffset*Point))
+   if( Close[1] >= (gNYBoxHigh + gAlertOffset*Point))
    {  
-      goodToEntry = true;
+      goodToEntryLong = true;
       entryPrice = Close[1];
    }
-   else if(Close[0] >= (gNYHigh + 100*Point))
+   else if(Close[0] >= (gNYBoxHigh + 250*Point))
    {
-      goodToEntry = true;
+      goodToEntryLong = true;
       entryPrice = Close[0];
    }
    
-   if( goodToEntry )
+   if( goodToEntryLong )
    {
-      if( gTktBuyOdr == 0 && hasTradedForTheDay == false )
+      if( gTktBuyOdr == 0 && gHasTradedForTheDay == false )
       { 
          double rawBuyEntryPrice = entryPrice;
          double buyOpenPrice = NormalizeDouble(rawBuyEntryPrice, Digits);
-         double buyStopPrice = NormalizeDouble(MathMin(buyOpenPrice - gNYRange/3*Point, buyOpenPrice-gSL1*Point), Digits);
-         double buyExitPrice = NormalizeDouble(MathMin(buyOpenPrice + gNYRange/3*Point, buyOpenPrice+gTP1*Point), Digits);
+         double buyStopPrice = NormalizeDouble(MathMin(buyOpenPrice - gNYBoxRange/3*Point, buyOpenPrice-gSL1*Point), Digits);
+         double buyExitPrice = NormalizeDouble(MathMax(buyOpenPrice + gNYBoxRange*3*Point, buyOpenPrice+gTP1*Point), Digits);
               
          string testBuyStatus = "[BuyEntryLine"+"]" + buyOpenPrice + 
                              " [StopLossLine"+"]" + buyStopPrice +
@@ -332,39 +350,39 @@ int start()
          aceLog(gLogFileName, testBuyStatus, gDoPrint, gDoLog);
 
          //buyStopPrice = 0;
-         buyExitPrice = 0; 
+         //buyExitPrice = 0; 
          
-         hasTradedForTheDay = true;
+         gHasTradedForTheDay = true;
          double buyLotSize = aceCaculateLotsize(AccountBalance(), eRiskPerTrade, eStopLossBase, buyOpenPrice, buyStopPrice);
          gTktBuyOdr = aceOrderSend(OP_BUYSTOP,buyLotSize,buyOpenPrice,0, buyStopPrice,buyExitPrice,COMMENT,MAGIC,TimeCurrent()+ 60*60*1, Blue);
          aceLog(gLogFileName, "BuyTiket: " + gTktBuyOdr, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "BuyEntry_Open: " + buyOpenPrice, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "BuyEntry_Stop: " + buyStopPrice, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "BuyEntry_Exit: " + buyExitPrice, gDoPrint, gDoLog);
+         return ;
       }
-      return ;
    }
    
-   if( Close[1] <= (gNYLow - gAlertOffset*Point))
+   if( Close[1] <= (gNYBoxLow - gAlertOffset*Point))
    {  
-      goodToEntry = true;
+      goodToEntryShort = true;
       entryPrice = Close[1];
    }
-   else if(Close[0] <= (gNYLow - 100*Point))
+   else if(Close[0] <= (gNYBoxLow - 250*Point))
    {
-      goodToEntry = true;
+      goodToEntryShort = true;
       entryPrice = Close[0];
    }
 
 
-   if( goodToEntry )
+   if( goodToEntryShort )
    {      
-      if( gTktSellOdr == 0 && hasTradedForTheDay == false)
+      if( gTktSellOdr == 0 && gHasTradedForTheDay == false)
       {
          double rawSellEntryPrice = entryPrice;
          double sellOpenPrice = NormalizeDouble(rawSellEntryPrice, Digits);
-         double sellStopPrice = NormalizeDouble(MathMax(sellOpenPrice + gNYRange/3*Point,sellOpenPrice+gSL1*Point), Digits);
-         double sellExitPrice = NormalizeDouble(MathMax(sellOpenPrice - gNYRange/3*Point,sellOpenPrice+gTP1*Point), Digits);
+         double sellStopPrice = NormalizeDouble(MathMax(sellOpenPrice + gNYBoxRange/3*Point,sellOpenPrice+gSL1*Point), Digits);
+         double sellExitPrice = NormalizeDouble(MathMin(sellOpenPrice - gNYBoxRange*3*Point,sellOpenPrice+gTP1*Point), Digits);
       
          string testSellStatus = "[SellEntryLine"+"]" + sellOpenPrice + 
                              " [StopLossLine"+"]" + sellStopPrice +
@@ -373,28 +391,19 @@ int start()
          aceLog(gLogFileName, testSellStatus, gDoPrint, gDoLog);     
                
          //sellStopPrice = 0;
-         sellExitPrice = 0;
+         //sellExitPrice = 0;
          
-         hasTradedForTheDay = true;
-         double sellLotSize = aceCaculateLotsize(AccountBalance(), eRiskPerTrade, eStopLossBase, sellStopPrice, sellOpenPrice);
+         gHasTradedForTheDay = true;
+         double sellLotSize = aceCaculateLotsize(AccountBalance(), eRiskPerTrade, eStopLossBase, sellOpenPrice, sellStopPrice);
          gTktSellOdr = aceOrderSend(OP_SELLSTOP,sellLotSize,sellOpenPrice,0,sellStopPrice, sellExitPrice,COMMENT,MAGIC,TimeCurrent()+60*60*1, Red);
          aceLog(gLogFileName, "SellTiket: " + gTktSellOdr, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "SellEntry_Open: " + sellOpenPrice, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "SellEntry_Stop: " + sellStopPrice, gDoPrint, gDoLog);
          //aceLog(gLogFileName, "SellEntry_Exit: " + sellExitPrice, gDoPrint, gDoLog);
+         return ;
       }
-      
-      return ;
-   }  
-         
-   if(gTktBuyOdr != 0)
-   {
-     aceTrailingStopByPoint(MAGIC, gTS1);
-   }
-   if(gTktSellOdr != 0)
-   {
-     aceTrailingStopByPoint(MAGIC, gTS1);
-   }
+   }         
+   performTrailingStop();
    return(0);
 }
 
