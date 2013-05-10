@@ -1,0 +1,30 @@
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;228:8;'ticket' - expression on global scope not allowed
+2;75;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;228:8;'ticket' - variable not defined
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;232:4;'sl' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;232:25;'sl' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;233:4;'tp' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;233:25;'tp' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;235:7;'sl' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;235:16;'sl' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;236:7;'tp' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;236:16;'tp' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;238:26;'sl' - expression on global scope not allowed
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;238:53;'tp' - expression on global scope not allowed
+2;80;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;240:20;'GetTickCount' - initialization expected
+2;100;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;240:32;'(' - comma or semicolon expected
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;240:33;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;241:14;')' - unbalanced right parenthesis
+1;41;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;242:4;'{' - expression on global scope not allowed
+2;75;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;243:27;'starttime' - variable not defined
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;243:62;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;245:60;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;246:22;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;248:34;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;250:72;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;250:85;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;252:70;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;253:33;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;254:37;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;256:16;')' - unbalanced right parenthesis
+2;88;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;258:16;')' - unbalanced right parenthesis
+2;73;C:\Program Files\MetaTrader 4 at FOREX.com\experts\libraries\aceOrderManager_2.0.mq4;259:1;'}' - unbalanced parentheses
