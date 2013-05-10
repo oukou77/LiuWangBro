@@ -24,7 +24,7 @@ public class GrossPerformanceCalculator implements MT4TradeCalculator {
 	private int shortTrades = 0;
 	private int longProfitTrades = 0;
 	private int shortProfitTrades = 0;
-	
+	xx
 	private int maxConsecutiveWinNumber = 0;
 	private double maxConsecutiveWinMoney = 0;
 	private int maxConsecutiveLossesNumber = 0;

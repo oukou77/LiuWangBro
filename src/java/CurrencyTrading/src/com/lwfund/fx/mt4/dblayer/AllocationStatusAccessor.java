@@ -18,7 +18,6 @@ import org.apache.commons.csv.CSVRecord;
 
 import com.lwfund.fx.mt4.MT4AllocationStatus;
 import com.lwfund.fx.mt4.MT4Constants;
-import com.lwfund.fx.mt4.MT4Trade;
 import com.lwfund.fx.mt4.util.MT4Display;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -27,6 +26,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
 
 public class AllocationStatusAccessor {
 
@@ -44,6 +44,57 @@ public class AllocationStatusAccessor {
 		// should clone
 		// so not public function atm
 		return allocations;
+	}
+	
+	public List<MT4AllocationStatus> getAlgoAllocationStatusByDate(Date eodDate) throws Exception{
+		List<MT4AllocationStatus> ret = new ArrayList<MT4AllocationStatus>();
+	
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeZone(TimeZone.getTimeZone(MT4Constants.TIMEZONE_HONGKONG));
+		cal.setTime(eodDate);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		
+		Date cleanEodDate = cal.getTime();
+		DBCursor cursor = null;
+		try {
+			if ((this.mongoInstance == null) || (!this.mongoInstance.getConnector().isOpen())) {
+				this.mongoInstance = new Mongo(
+						MT4Constants.TEMP_DB_SERVER_ADDRESS,
+						MT4Constants.TEMP_DB_SERVER_PORT);
+			}
+
+			if (this.mongoFXDB == null) {
+				this.mongoFXDB = this.mongoInstance
+						.getDB(MT4Constants.MONGODB_FX_DB_NAME);
+			}
+
+			DBCollection coll = this.mongoFXDB
+					.getCollection(MT4Constants.MONGODB_FX_DB_ALLOCATION_STATUS_COLLECTION);
+			coll.setObjectClass(MT4AllocationStatus.class);
+			
+			BasicDBObject query = new BasicDBObject();
+			query.put(MT4Constants.EOD_DATE_IN_MONGO, cleanEodDate);
+			cursor = coll.find(query);
+			while (cursor.hasNext()) {
+				ret.add((MT4AllocationStatus)cursor.next());
+			}
+
+		} catch (UnknownHostException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} catch (MongoException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} finally{
+			if(cursor != null){
+				cursor.close();
+			}
+			//How to close?
+		}
+		
+		return ret;
 	}
 	
 	public List<MT4AllocationStatus> getAlgoAllocationStatusByAlgoIDAndDate(String algoID, Date eodDate) throws Exception{
@@ -211,6 +262,47 @@ public class AllocationStatusAccessor {
 //			this.mongoInstance = null;
 		}
 		MT4Display.outToConsole("insert is done. [" + ret + "] rows affected!");
+		return ret;
+	}
+	
+	public int removeAllocationStatusForDateRange(Date fromDate, Date toDate) throws Exception{
+		int ret = 0;
+		BasicDBObject query = new BasicDBObject();
+
+		query.put(MT4Constants.EOD_DATE_IN_MONGO, new BasicDBObject(
+				"$gte", fromDate));
+		query.put(MT4Constants.EOD_DATE_IN_MONGO, new BasicDBObject(
+				"$lte", toDate));
+		
+		try {
+			if ((this.mongoInstance == null) || (!this.mongoInstance.getConnector().isOpen())) {
+				this.mongoInstance = new Mongo(
+						MT4Constants.TEMP_DB_SERVER_ADDRESS,
+						MT4Constants.TEMP_DB_SERVER_PORT);
+			}
+
+			if (this.mongoFXDB == null) {
+				this.mongoFXDB = this.mongoInstance
+						.getDB(MT4Constants.MONGODB_FX_DB_NAME);
+			}
+
+			DBCollection coll = this.mongoFXDB
+					.getCollection(MT4Constants.MONGODB_FX_DB_ALLOCATION_STATUS_COLLECTION);
+			WriteResult wr = coll.remove(query);
+			ret = wr.getN();
+
+		} catch (UnknownHostException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} catch (MongoException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} finally{
+//			this.mongoInstance.close();
+//			this.mongoInstance = null;
+		}
+		MT4Display.outToConsole("remove is done. [" + ret + "] rows affected!");
+		
 		return ret;
 	}
 	
