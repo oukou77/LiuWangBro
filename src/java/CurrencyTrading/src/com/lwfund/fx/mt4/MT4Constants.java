@@ -22,11 +22,39 @@ public class MT4Constants {
 	public static final int CHART_PERIOD_TYPE_W1 = 8;
 	public static final int CHART_PERIOD_TYPE_MN = 9;
 	
+	public static final int REPORT_PERIOD_7DAYS = 7;
+	public static final int REPORT_PERIOD_30DAYS = 30;
+	public static final int REPORT_PERIOD_300DAYS = 300;
+	public static final int REPORT_PERIOD_YTD = 1;
+	
+	public static final String PERFORMANCE_RPT_TYPE = "PerformanceReportType";
+	
+	public static final String RESULTS_GROSS_PERFORMANCE = "GrossPerformance";
+	public static final String RESULTS_DRAWDOWN = "Drawdown";
+	
+	public static final int MARKET_DATA_PRICE_TYPE_OPEN = 1;
+	public static final int MARKET_DATA_PRICE_TYPE_CLOSE = 2;
+	public static final int MARKET_DATA_PRICE_TYPE_HIGH = 3;
+	public static final int MARKET_DATA_PRICE_TYPE_LOW = 4;
+	public static final int MARKET_DATA_PRICE_TYPE_VOLUME = 5;
+	
+	public static final String MARKET_DATA_BAR_PERIOD_TYPE = "BarPeriodType";
+	public static final String MARKET_DATA_CLOSE = "Close";
+	public static final String MARKET_DATA_HIGH = "High";
+	public static final String MARKET_DATA_TIME = "Time";
+	public static final String MARKET_DATA_LOW = "Low";
+	public static final String MARKET_DATA_OPEN = "Open";
+	public static final String MARKET_DATA_SYMBOL = "Symbol";
+	public static final String MARKET_DATA_VOLUME = "Volume";
+	
 	public static final String FIXED_MARKET_DATA_SOURCE_ACCT_ID = "10952720";
 	public static final int FIXED_MARKET_DATA_BAR_TYPE = 1;
 	public static final String FIXED_MARKET_DATA_FILE_SUFFIX = "TKO.csv";
 	public static final String[] FX_SYMBOL_ARRAY = {"EURUSDpro","USDJPYpro","EURJPYpro","GBPJPYpro","AUDJPYpro","NZDJPYpro"};
-	
+	public static final String FIXED_DEPOSIT_COMMENT = "Deposit";
+	public static final String FIXED_DEPOSIT_COMMENT_FOREX = "Wires";
+	public static final String FIXED_JPY_SYMBOL = "JPY";
+	public static final int FIXED_DAYS_IN_YEAR = 360;
 	
 	public static final String EOD_INPUT_FILE_ACCOUNT_INFO = "AccountInfoFor#As@.csv";
 	public static final String EOD_INPUT_FILE_TRADE_ARCHIVE = "TradesArchiveFor#As@.csv";
@@ -35,6 +63,7 @@ public class MT4Constants {
 	public static final String EOD_TO_DATE = "to date";
 	
 	public static final String ACCOUNT_ID = "account number";
+	public static final String ACCOUNT_ID_IN_MONGO = "AccountID";
 	public static final String ACCOUNT_BALANCE = "account balance";
 	public static final String ACCOUNT_PROFIT = "account profit";
 	public static final String ACCOUNT_EQUITY = "account equity";
@@ -48,6 +77,7 @@ public class MT4Constants {
 	public static final String ALGORITHM_EQUITY = "algo equity";
 	public static final String ALGORITHM_MARGIN = "algo margin";
 	public static final String ALGORITHM_FREE_MARGIN = "algo free margin";
+	public static final String ACCOUNT_DEPOSIT = "account deposit";
 	
 	public static final String EOD_DATE = "eod date";
 	public static final String EOD_DATE_IN_MONGO = "EodDate";
@@ -76,12 +106,14 @@ public class MT4Constants {
 	public static final String TRADE_ORDER_TYPE = "order type";
 	public static final String TRADE_ORDER_TYPE_IN_MONGO = "OrderType";
 	public static final String TRADE_ACCOUNT_ID = "account id";
+	public static final String TRADE_ACCOUNT_ID_IN_MONGO = "AccountID";
 	public static final String TRADE_IS_CLOSED = "is closed";
 	public static final String TRADE_EOD_DATE = "eod date";
 	public static final String TRADE_IS_CLOSED_VALUE = "1";
 	
 	public static final String DEFAULT_DATE_ZERO_CONVERT = "1970.01.01 00:00";
 	public static final String DEFAULT_DATE_FORMAT= "yyyy.MM.dd HH:mm";
+	public static final String DEFAULT_MARKET_DATA_TIME_FORMAT = "yyyy.MM.ddHH:mm";
 	public static final String DEFAULT_DATE_ZERO = "0";
 	
 	public static final String HTML_RPT_ID = "#";
@@ -107,6 +139,7 @@ public class MT4Constants {
 	public static final String MONGODB_FX_DB_ALLOCATION_STATUS_COLLECTION ="AllocationStatus";
 	public static final String MONGODB_FX_DB_MARKET_DATA_COLLECTION = "MarketData";
 	public static final String MONGODB_FX_DB_GROSS_PERFORMANCE_COLLECTION = "GrossPerformance";
+	public static final String MONGODB_FX_DB_REFERENCED_RATES_COLLECTION = "ReferencedRates";
 	
 	public static final String PERFORMANCE_RPT_PROFIT_EXPECTATION = "ProfitExpecation";
 	public static final String PERFORMANCE_RPT_PROFIT_STANDARD_DEVIATION = "ProfitStandardDeviation";
@@ -144,5 +177,8 @@ public class MT4Constants {
 	public static final String PERFORMANCE_RPT_MAX_DRAWDOWN_PERCENT = "MaximalDrawdownPercent";
 	public static final String PERFORMANCE_RPT_RELATIVE_DRAWDOWN = "RelativeDrawdown";
 	public static final String PERFORMANCE_RPT_RELATIVE_DRAWDOWN_PERCENT = "RelativeDrawdownPercent";
-	
+	public static final String PERFORMANCE_RPT_AVG_LOT = "AverageLot";
+	public static final String PERFORMANCE_RPT_TOTAL_PIPS = "totalPips";
+	public static final String PERFORMANCE_RPT_PROFIT_PIPS = "profitPips";
+	public static final String PERFORMANCE_RPT_LOSS_PIPS = "lossPips";
 }

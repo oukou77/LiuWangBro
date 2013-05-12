@@ -14,6 +14,7 @@ public class MT4AllocationStatus extends ReflectionDBObject{
 	private double freeMargin;
 	private double margin;
 	private Date eodDate;
+	private double deposit;
 	
 	public String getAccountID() {
 		return accountID;
@@ -62,6 +63,12 @@ public class MT4AllocationStatus extends ReflectionDBObject{
 	}
 	public void setEodDate(Date eodDate) {
 		this.eodDate = eodDate;
+	}
+	public double getDeposit() {
+		return deposit;
+	}
+	public void setDeposit(double deposit) {
+		this.deposit = deposit;
 	}
 	
 }

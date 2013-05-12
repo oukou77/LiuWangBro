@@ -31,6 +31,20 @@ public class DrawdownCalculator implements MT4TradeCalculator {
 			absoluteDrawdown = initialDeposit;
 		}
 	}
+	
+	public void deinit(){
+		initialDeposit = 0;
+		balance = 0;
+		absoluteDrawdown = 0;
+		maximumDrawdown = 0;
+		maximumDrawdownPercent = 0;
+		drawdown = 0;
+		drawdownPercent =0;
+		relativeDrawdown = 0;
+		relativeDrawdownPercent = 0;
+		maximalPeak = 0;
+		minimalPeak = 0;
+	}
 
 	@Override
 	public void process(MT4Trade trade) {

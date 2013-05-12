@@ -49,23 +49,23 @@ public class DailyMT4EODProcessor {
 		// save account information
 		// trade archive and position archive
 		// per account base
-		for (MT4Account mt4Account : accountList) {
-			String accountAllocationStatusFileName = MT4Constants.EOD_INPUT_FILE_ACCOUNT_INFO
-					.replaceAll("#", mt4Account.getAccountID());
-			accountAllocationStatusFileName = accountAllocationStatusFileName
-					.replaceAll("@", cutoffDateStr);
-			accountAllocationStatusFileName = args[0]
-					+ accountAllocationStatusFileName;
-			ass.parseAccountAllocationStatus(accountAllocationStatusFileName);
-			ass.persitent();
-			String tradeArchiveFileName = MT4Constants.EOD_INPUT_FILE_TRADE_ARCHIVE
-					.replaceAll("#", mt4Account.getAccountID());
-			tradeArchiveFileName = tradeArchiveFileName.replaceAll("@",
-					cutoffDateStr);
-			tradeArchiveFileName = args[0] + tradeArchiveFileName;
-			tas.parseTrades(tradeArchiveFileName);
-			tas.persitent();
-		}
+//		for (MT4Account mt4Account : accountList) {
+//			String accountAllocationStatusFileName = MT4Constants.EOD_INPUT_FILE_ACCOUNT_INFO
+//					.replaceAll("#", mt4Account.getAccountID());
+//			accountAllocationStatusFileName = accountAllocationStatusFileName
+//					.replaceAll("@", cutoffDateStr);
+//			accountAllocationStatusFileName = args[0]
+//					+ accountAllocationStatusFileName;
+//			ass.parseAccountAllocationStatus(accountAllocationStatusFileName);
+//			ass.persitent();
+//			String tradeArchiveFileName = MT4Constants.EOD_INPUT_FILE_TRADE_ARCHIVE
+//					.replaceAll("#", mt4Account.getAccountID());
+//			tradeArchiveFileName = tradeArchiveFileName.replaceAll("@",
+//					cutoffDateStr);
+//			tradeArchiveFileName = args[0] + tradeArchiveFileName;
+//			tas.parseTrades(tradeArchiveFileName);
+//			tas.persitent();
+//		}
 
 		//stream market data
 		MarketDataAccessor mda = new MarketDataAccessor();
@@ -80,8 +80,8 @@ public class DailyMT4EODProcessor {
 		}
 		
 		//process the allocation calculation
-		AlgoAllocationStatusProcessor asp = new AlgoAllocationStatusProcessor();
-		asp.processForDate(cutoffDateStr, false);
+//		AlgoAllocationStatusProcessor asp = new AlgoAllocationStatusProcessor();
+//		asp.processForDate(cutoffDateStr, false);
 		
 		//
 	}

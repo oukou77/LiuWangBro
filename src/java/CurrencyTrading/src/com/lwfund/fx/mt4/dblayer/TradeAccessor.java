@@ -22,6 +22,7 @@ import com.lwfund.fx.mt4.MT4Algorithm;
 import com.lwfund.fx.mt4.MT4Trade;
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.util.MT4Display;
+import com.lwfund.fx.mt4.util.MT4EODUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -38,6 +39,10 @@ public class TradeAccessor {
 	private Mongo mongoInstance = null;
 	private DB mongoFXDB = null;
 
+//	public TradeAccessor() {
+//		trades = new ArrayList<DBObject>();
+//	}
+	
 	List<DBObject> getParsedTrades() {
 		// should clone
 		// package access level atm
@@ -46,7 +51,7 @@ public class TradeAccessor {
 
 	public List<MT4Trade> getTradesByQuery(BasicDBObject query,
 			boolean isClosedOnly) throws Exception {
-		List<MT4Trade> ret = null;
+		List<MT4Trade> ret = new ArrayList<MT4Trade>();
 		DBCursor currentCursor = null;
 
 		try {
@@ -73,7 +78,7 @@ public class TradeAccessor {
 			while (currentCursor.hasNext()) {
 				MT4Trade currentClosedTrade = (MT4Trade) currentCursor.next();
 				currentClosedTrade.setClosed(true);
-				trades.add(currentClosedTrade);
+				ret.add(currentClosedTrade);
 			}
 
 			if (!isClosedOnly) {
@@ -86,7 +91,7 @@ public class TradeAccessor {
 				while (currentCursor.hasNext()) {
 					MT4Trade currentOpenTrade = (MT4Trade) currentCursor.next();
 					currentOpenTrade.setClosed(false);
-					trades.add(currentOpenTrade);
+					ret.add(currentOpenTrade);
 				}
 			}
 		} catch (UnknownHostException ex) {
@@ -109,14 +114,86 @@ public class TradeAccessor {
 
 		BasicDBObject query = new BasicDBObject();
 
+		Map<String, Date>adjustedEOD = MT4EODUtil.getEODDateRange(fromDate);
+		Date adjustedFromDate = adjustedEOD.get(MT4Constants.EOD_FROM_DATE);
+		
+		adjustedEOD = MT4EODUtil.getEODDateRange(toDate);
+		Date adjustedToDate = adjustedEOD.get(MT4Constants.EOD_TO_DATE);
+		
 		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
-				"$gte", fromDate));
-		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
-				"$lte", toDate));
-
+				"$gte", adjustedFromDate).append("$lte", adjustedToDate));
+		
+		List<Integer> orderTypeList = new ArrayList<Integer>();
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_BUY));
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_SELL));
+		query.put(MT4Constants.TRADE_ORDER_TYPE_IN_MONGO, new BasicDBObject("$in", orderTypeList));
+		
 		return this.getTradesByQuery(query, isClosedOnly);
 	}
 
+	public List<MT4Trade> getAllTradesByDateRange(Date fromDate, Date toDate, boolean isClosedOnly) throws Exception{
+		BasicDBObject query = new BasicDBObject();
+
+		Map<String, Date>adjustedEOD = MT4EODUtil.getEODDateRange(fromDate);
+		Date adjustedFromDate = adjustedEOD.get(MT4Constants.EOD_FROM_DATE);
+		
+		adjustedEOD = MT4EODUtil.getEODDateRange(toDate);
+		Date adjustedToDate = adjustedEOD.get(MT4Constants.EOD_TO_DATE);
+		
+		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
+				"$gte", adjustedFromDate).append("$lte", adjustedToDate));
+		return this.getTradesByQuery(query, isClosedOnly);
+	}
+	
+	public List<MT4Trade> getAllTradesByAccountAndDateRange(String accountID,
+			Date fromDate, Date toDate, boolean isClosedOnly) throws Exception {
+		if(accountID == null || accountID.isEmpty()){
+			return null;
+		}
+		
+		BasicDBObject query = new BasicDBObject();
+
+		Map<String, Date>adjustedEOD = MT4EODUtil.getEODDateRange(fromDate);
+		Date adjustedFromDate = adjustedEOD.get(MT4Constants.EOD_FROM_DATE);
+		
+		adjustedEOD = MT4EODUtil.getEODDateRange(toDate);
+		Date adjustedToDate = adjustedEOD.get(MT4Constants.EOD_TO_DATE);
+		
+		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
+				"$gte", adjustedFromDate).append("$lte", adjustedToDate));
+		query.put(MT4Constants.TRADE_ACCOUNT_ID_IN_MONGO, accountID);
+
+		return this.getTradesByQuery(query, isClosedOnly);
+	}
+	
+	public List<MT4Trade> getLongShortTradesByAccountAndDateRange(String accountID,
+			Date fromDate, Date toDate, boolean isClosedOnly) throws Exception {
+
+		if(accountID == null || accountID.isEmpty()){
+			return null;
+		}
+		
+		BasicDBObject query = new BasicDBObject();
+
+		Map<String, Date>adjustedEOD = MT4EODUtil.getEODDateRange(fromDate);
+		Date adjustedFromDate = adjustedEOD.get(MT4Constants.EOD_FROM_DATE);
+		
+		adjustedEOD = MT4EODUtil.getEODDateRange(toDate);
+		Date adjustedToDate = adjustedEOD.get(MT4Constants.EOD_TO_DATE);
+		
+		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
+				"$gte", adjustedFromDate).append("$lte", adjustedToDate));
+		query.put(MT4Constants.TRADE_ACCOUNT_ID_IN_MONGO, accountID);
+		
+		List<Integer> orderTypeList = new ArrayList<Integer>();
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_BUY));
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_SELL));
+		
+		query.put(MT4Constants.TRADE_ORDER_TYPE_IN_MONGO, new BasicDBObject("$in", orderTypeList));
+
+		return this.getTradesByQuery(query, isClosedOnly);
+	}
+	
 	public List<MT4Trade> getLongShortTradesByAlgoAndDateRange(String algoID,
 			Date fromDate, Date toDate, boolean isClosedOnly) throws Exception {
 
@@ -126,10 +203,19 @@ public class TradeAccessor {
 		
 		BasicDBObject query = new BasicDBObject();
 
+		Map<String, Date>adjustedEOD = MT4EODUtil.getEODDateRange(fromDate);
+		Date adjustedFromDate = adjustedEOD.get(MT4Constants.EOD_FROM_DATE);
+		
+		adjustedEOD = MT4EODUtil.getEODDateRange(toDate);
+		Date adjustedToDate = adjustedEOD.get(MT4Constants.EOD_TO_DATE);
+		
 		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
-				"$gte", fromDate));
-		query.put(MT4Constants.TRADE_CLOSE_TIME_IN_MONGO, new BasicDBObject(
-				"$lte", toDate));
+				"$gte", adjustedFromDate).append("$lte", adjustedToDate));
+		
+		List<Integer> orderTypeList = new ArrayList<Integer>();
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_BUY));
+		orderTypeList.add(new Integer(MT4Constants.TRADE_ORDER_TYPE_SELL));
+		query.put(MT4Constants.TRADE_ORDER_TYPE_IN_MONGO, new BasicDBObject("$in", orderTypeList));
 		
 		Map<String, MT4Algorithm> allAlgos = AlgorithmAccessor.getAllAlgos();
 		MT4Algorithm algo = allAlgos.get(algoID);

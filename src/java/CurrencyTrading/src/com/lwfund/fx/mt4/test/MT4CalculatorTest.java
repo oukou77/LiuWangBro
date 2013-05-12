@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.MT4Trade;
-import com.lwfund.fx.mt4.calculators.DescriptiveStatisticsCalculator;
+import com.lwfund.fx.mt4.calculators.AlgoStatisticsCalculator;
 import com.lwfund.fx.mt4.calculators.DrawdownCalculator;
 import com.lwfund.fx.mt4.calculators.GrossPerformanceCalculator;
 import com.lwfund.fx.mt4.calculators.MT4TradeCalculator;
@@ -25,7 +25,7 @@ public class MT4CalculatorTest {
 		AllClosedTradesArchive ata = new AllClosedTradesArchive();
 		List<DBObject> trades = ata.retrieveTradesToBuffer(filename);
 //		DrawdownCalculator c1 = new DrawdownCalculator();
-		DescriptiveStatisticsCalculator c1 = new DescriptiveStatisticsCalculator();
+		AlgoStatisticsCalculator c1 = new AlgoStatisticsCalculator();
 		Map<String, String>initParameters = new HashMap<String, String>();
 		initParameters.put(MT4Constants.PERFORMANCE_RPT_INITIAL_DEPOSIT, "1000000");
 		c1.init(initParameters);

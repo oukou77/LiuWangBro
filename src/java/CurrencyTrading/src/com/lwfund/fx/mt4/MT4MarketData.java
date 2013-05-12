@@ -1,13 +1,14 @@
 package com.lwfund.fx.mt4;
 
+import java.util.Date;
+
 import com.mongodb.ReflectionDBObject;
 
 public class MT4MarketData extends ReflectionDBObject {
 
 	private String accountID;
 	private String symbol;
-	private String dateStr;
-	private String hourMinStr;
+	private Date time;
 	private int barPeriodType;
 	private double open;
 	private double close;
@@ -26,18 +27,6 @@ public class MT4MarketData extends ReflectionDBObject {
 	}
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
-	}
-	public String getDateStr() {
-		return dateStr;
-	}
-	public void setDateStr(String dateStr) {
-		this.dateStr = dateStr;
-	}
-	public String getHourMinStr() {
-		return hourMinStr;
-	}
-	public void setHourMinStr(String hourMinStr) {
-		this.hourMinStr = hourMinStr;
 	}
 	public int getBarPeriodType() {
 		return barPeriodType;
@@ -75,7 +64,10 @@ public class MT4MarketData extends ReflectionDBObject {
 	public void setVolume(double volume) {
 		this.volume = volume;
 	}
-	
-	
-	
+	public Date getTime() {
+		return time;
+	}
+	public void setTime(Date time) {
+		this.time = time;
+	}
 }

@@ -20,13 +20,13 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	private double relativeDrawdown;
 	private double relativeDrawdownPercentage;
 	private int totalTrades;
-	private double shortPositionWon;
+	private int shortPositionWon;
 	private double shortPositionWonPercentage;
-	private double longPositionWon;
+	private int longPositionWon;
 	private double longPositionWonPercentage;
-	private double profitTrades;
+	private int profitTrades;
 	private double profitTradesPercentage;
-	private double lossTrades;
+	private int lossTrades;
 	private double lossTradesPercentage;
 	private double largestProfitTrade;
 	private double largestLossTrade;
@@ -42,6 +42,9 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	private double maxConsecutiveLoss;
 	private int avgConsecutiveWins;
 	private int avgConsecutiveLosses;
+	private double totalPipsInJPY;
+	private double avgProfitPipsInJPY;
+	private double avgLossPipsInJPY;
 	
 	//Additional
 	private double sharpeRatio;
@@ -49,7 +52,6 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	private double riskFreeRate;
 	private double volatility;
 	private double avgLots;
-	private double avgPipsInJpy;
 	private double defaultValueAtRisk;
 	
 	public String getAlgoID() {
@@ -118,10 +120,10 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setTotalTrades(int totalTrades) {
 		this.totalTrades = totalTrades;
 	}
-	public double getShortPositionWon() {
+	public int getShortPositionWon() {
 		return shortPositionWon;
 	}
-	public void setShortPositionWon(double shortPositionWon) {
+	public void setShortPositionWon(int shortPositionWon) {
 		this.shortPositionWon = shortPositionWon;
 	}
 	public double getShortPositionWonPercentage() {
@@ -130,10 +132,10 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setShortPositionWonPercentage(double shortPositionWonPercentage) {
 		this.shortPositionWonPercentage = shortPositionWonPercentage;
 	}
-	public double getLongPositionWon() {
+	public int getLongPositionWon() {
 		return longPositionWon;
 	}
-	public void setLongPositionWon(double longPositionWon) {
+	public void setLongPositionWon(int longPositionWon) {
 		this.longPositionWon = longPositionWon;
 	}
 	public double getLongPositionWonPercentage() {
@@ -142,10 +144,10 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setLongPositionWonPercentage(double longPositionWonPercentage) {
 		this.longPositionWonPercentage = longPositionWonPercentage;
 	}
-	public double getProfitTrades() {
+	public int getProfitTrades() {
 		return profitTrades;
 	}
-	public void setProfitTrades(double profitTrades) {
+	public void setProfitTrades(int profitTrades) {
 		this.profitTrades = profitTrades;
 	}
 	public double getProfitTradesPercentage() {
@@ -154,10 +156,10 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setProfitTradesPercentage(double profitTradesPercentage) {
 		this.profitTradesPercentage = profitTradesPercentage;
 	}
-	public double getLossTrades() {
+	public int getLossTrades() {
 		return lossTrades;
 	}
-	public void setLossTrades(double lossTrades) {
+	public void setLossTrades(int lossTrades) {
 		this.lossTrades = lossTrades;
 	}
 	public double getLossTradesPercentage() {
@@ -280,12 +282,6 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setAvgLots(double avgLots) {
 		this.avgLots = avgLots;
 	}
-	public double getAvgPipsInJpy() {
-		return avgPipsInJpy;
-	}
-	public void setAvgPipsInJpy(double avgPipsInJpy) {
-		this.avgPipsInJpy = avgPipsInJpy;
-	}
 	public double getDefaultValueAtRisk() {
 		return defaultValueAtRisk;
 	}
@@ -298,5 +294,22 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setEodDate(Date eodDate) {
 		this.eodDate = eodDate;
 	}
-	
+	public double getTotalPipsInJPY() {
+		return totalPipsInJPY;
+	}
+	public void setTotalPipsInJPY(double totalPipsInJPY) {
+		this.totalPipsInJPY = totalPipsInJPY;
+	}
+	public double getAvgProfitPipsInJPY() {
+		return avgProfitPipsInJPY;
+	}
+	public void setAvgProfitPipsInJPY(double avgProfitPipsInJPY) {
+		this.avgProfitPipsInJPY = avgProfitPipsInJPY;
+	}
+	public double getAvgLossPipsInJPY() {
+		return avgLossPipsInJPY;
+	}
+	public void setAvgLossPipsInJPY(double avgLossPipsInJPY) {
+		this.avgLossPipsInJPY = avgLossPipsInJPY;
+	}
 }

@@ -1,40 +1,33 @@
 package com.lwfund.fx.mt4.calculators;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.lwfund.fx.mt4.MT4Algorithm;
 import com.lwfund.fx.mt4.MT4Constants;
 import com.lwfund.fx.mt4.MT4Trade;
-import com.lwfund.fx.mt4.dblayer.AlgorithmAccessor;
 import com.lwfund.fx.mt4.util.MT4EODUtil;
 
-public class AlgoAllocationStatusCalculator implements MT4TradeCalculator {
-	private String algoID;
+public class PortfolioAccountAllocStatusCalculator implements
+		MT4TradeCalculator {
+	private String accountID;
+	private double balance;
+	private double equity;
+	private double margin;
+	private String eodStr;
 	private Date eodFrom;
 	private Date eodTo;
-	private String eodStr;
-	private double equity;
-	private double balance;
-	private double margin;
-	private static final DateFormat sdf = new SimpleDateFormat(
-			MT4Constants.DEFAULT_DATE_FORMAT);
-	private MT4Algorithm algo;
-	private double usedMargin;
+	private double deposit;
 	
 	@Override
-	public void init(Map<String, String> parameters){
-		algoID = parameters.get(MT4Constants.ALGORITHM_ID);
-		algo = AlgorithmAccessor.getAllAlgos().get(algoID);
+	public void init(Map<String, String> parameters) {
+		accountID = parameters.get(MT4Constants.ACCOUNT_ID);
 		eodStr = parameters.get(MT4Constants.EOD_DATE);
-		balance = Double.parseDouble(parameters.get(MT4Constants.ALGORITHM_BALANCE));
-		equity = Double.parseDouble(parameters.get(MT4Constants.ALGORITHM_EQUITY));
-		margin = Double.parseDouble(parameters.get(MT4Constants.ALGORITHM_MARGIN));
-		usedMargin = 0;
+		balance = Double.parseDouble(parameters.get(MT4Constants.ACCOUNT_BALANCE));
+		equity = Double.parseDouble(parameters.get(MT4Constants.ACCOUNT_EQUITY));
+		margin = Double.parseDouble(parameters.get(MT4Constants.ACCOUNT_MARGIN));
+		
 		try {
 			Map<String,Date> range = MT4EODUtil.getEODDateRange(eodStr);
 			eodFrom = range.get(MT4Constants.EOD_FROM_DATE);
@@ -47,33 +40,38 @@ public class AlgoAllocationStatusCalculator implements MT4TradeCalculator {
 	}
 
 	public void deinit(){
-		algoID = null;
+		accountID = null;
+		balance = 0;
+		equity = 0;
+		margin = 0;
+		eodStr = null;
 		eodFrom = null;
 		eodTo = null;
-		eodStr = null;
-		equity = 0;
-		balance = 0;
-		margin = 0;
-		usedMargin = 0;
+		deposit = 0;		
 	}
 	
 	@Override
 	public void process(MT4Trade trade) {
-		if(algo == null || trade == null || eodFrom == null || eodTo == null){
+		if(accountID == null || trade == null || eodFrom == null || eodTo == null){
 			return;
 		}
 
-		if(algo.getMagicNumber() != trade.getMagicNumber()){
+		if(!accountID.equals(trade.getAccountID())){
 			return;
 		}
 		
 		if(trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_SELL || 
-				trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_BUY){
+				trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_BUY || 
+				trade.getOrderType() == MT4Constants.TRADE_ORDER_TYPE_BROKER_ACTION ){
+
 			if(trade.isClosed()){
 				if(this.eodFrom.before(trade.getCloseTime()) && this.eodTo.after(trade.getCloseTime())){
 					balance += trade.getRealProfit();
 					equity = balance;
-	// TODO
+	// TODO			
+					if(trade.isDepositTrade()){
+						deposit += trade.getRealProfit();
+					}
 //					margin -= ;
 				}
 			}else{
@@ -84,15 +82,17 @@ public class AlgoAllocationStatusCalculator implements MT4TradeCalculator {
 				}			
 			}
 		}
+
 	}
 
 	@Override
 	public Map<String, String> calculate() {
 		Map<String, String> ret = new HashMap<String, String>();
 		ret.put(MT4Constants.EOD_DATE, eodStr);
-		ret.put(MT4Constants.ALGORITHM_BALANCE, Double.toString(balance));
-		ret.put(MT4Constants.ALGORITHM_EQUITY, Double.toString(equity));
-		ret.put(MT4Constants.ALGORITHM_MARGIN, Double.toString(margin));
+		ret.put(MT4Constants.ACCOUNT_BALANCE, Double.toString(balance));
+		ret.put(MT4Constants.ACCOUNT_EQUITY, Double.toString(equity));
+		ret.put(MT4Constants.ACCOUNT_MARGIN, Double.toString(margin));
+		ret.put(MT4Constants.ACCOUNT_DEPOSIT, Double.toString(deposit));
 		return ret;
 	}
 
