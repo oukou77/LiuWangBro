@@ -128,44 +128,6 @@ void ClosePositions(bool closeBuy, bool closeSell)
    }
 }
 
-void xTrailingStop(double rawNewStopPrice)
-{
-    double newStopPrice = NormalizeDouble(rawNewStopPrice, Digits);         
-    //newStopPrice = 0;
-             
-    for(int i=0; i<OrdersTotal(); i++)
-    {
-      if(OrderSelect(i, SELECT_BY_POS) == false) break;
-      if(OrderSymbol() != Symbol() || OrderMagicNumber() != MAGIC) continue;
-      double currStopLoss = OrderStopLoss();
-            
-      if(OrderType() == OP_BUY || OrderType() == OP_BUYLIMIT)
-      {
-         //newStopPrice = NormalizeDouble(MathMin(rawNewStopPrice, OrderOpenPrice( ) - stopLossPoints * Point), Digits);
-         newStopPrice = NormalizeDouble((Close[0]-stopLossPoints* Point), Digits);
-         if(newStopPrice > currStopLoss || currStopLoss == 0)
-         {
-            aceOrderModify(newStopPrice, 0, MAGIC);
-            string status1 = "xTrailingStop_buy["+currStopLoss+"]--->>>"+ "newStopPrice["+newStopPrice+"]";
-            Print (status1);
-            break;
-         }         
-      }
-      if(OrderType() == OP_SELL || OrderType() == OP_SELLLIMIT)
-      {
-         //newStopPrice = NorealizeDouble(MathMin(rawNewStopPrice, OrderOpenPrice( ) + stopLossPoints * Point), Digits);
-         newStopPrice = NormalizeDouble((Close[0]+stopLossPoints* Point), Digits);
-         if(newStopPrice < currStopLoss || currStopLoss == 0)
-         {
-            aceOrderModify(newStopPrice, 0, MAGIC);
-            string status2 = "xTrailingStop_sell["+currStopLoss+"]--->>>"+ "newStopPrice["+newStopPrice+"]";
-            Print (status2);
-            break;
-         }
-       }
-     }
-}
-
 int init()
 {
    // 0. create a new log file, the convention follows:
@@ -219,17 +181,23 @@ int start()
 	    hasPendingSell = false;
 	}	
 	
-   double bbU1 = iBands(NULL, PERIOD_D1, 20, BBDev*1, 0, PRICE_WEIGHTED, MODE_UPPER, 0);
-   double bbU2 = iBands(NULL, PERIOD_D1, 20, BBDev*2, 0, PRICE_WEIGHTED, MODE_UPPER, 0);   
+   double bbU1 = iBands(NULL, PERIOD_D1, 20, BBDev*1, 0, PRICE_WEIGHTED, MODE_UPPER, 1);
+   double bbU2 = iBands(NULL, PERIOD_D1, 20, BBDev*2, 0, PRICE_WEIGHTED, MODE_UPPER, 1);   
    
-   double bbL1 = iBands(NULL, PERIOD_D1, 20, BBDev*1, 0, PRICE_WEIGHTED, MODE_LOWER, 0);
-   double bbL2 = iBands(NULL, PERIOD_D1, 20, BBDev*2, 0, PRICE_WEIGHTED, MODE_LOWER, 0);   
+   double bbL1 = iBands(NULL, PERIOD_D1, 20, BBDev*1, 0, PRICE_WEIGHTED, MODE_LOWER, 1);
+   double bbL2 = iBands(NULL, PERIOD_D1, 20, BBDev*2, 0, PRICE_WEIGHTED, MODE_LOWER, 1);   
 
    double prevOpen = iOpen( NULL, PERIOD_D1, 1); 
    double prevClose = iClose( NULL, PERIOD_D1, 1); 
    double prevHigh = iHigh( NULL, PERIOD_D1, 1); 
    double prevLow = iLow( NULL, PERIOD_D1, 1); 
-
+   
+   double fastMA1 = iMA(NULL, 0, 20, 0, MODE_SMA, PRICE_WEIGHTED, 1);
+   double fastMA2 = iMA(NULL, 0, 20, 0, MODE_SMA, PRICE_WEIGHTED, 2);   
+   
+   double cci_0 = iCCI(NULL, PERIOD_D1, 20, PRICE_WEIGHTED, 0);
+   double cci_1 = iCCI(NULL, PERIOD_D1, 20, PRICE_WEIGHTED, 1);
+   
    if( Volume[0] == 1 )
    {
       string check_yesterday = "[mkt][yesterday][bbU1"+"]" + bbU1 + 
@@ -240,10 +208,12 @@ int start()
                              " [Close[0]"+"]" + (Close[0]);                             
       aceLog(gLogFileName, check_yesterday, gDoPrint, gDoLog);
       
-      if( prevOpen < prevClose && prevClose > bbU1 && prevClose < bbU2 && hasPendingBuy == false )
+      if( prevOpen < prevClose && prevClose > bbU1 && prevClose < bbU2 && hasPendingBuy == false 
+         && fastMA2 < fastMA1 && cci_0 >cci_1
+      )
       {
          double buyOpen = NormalizeDouble(Close[0], Digits);
-         double buyStop = NormalizeDouble(1, Digits);
+         double buyStop = NormalizeDouble(bbL1, Digits);
          double buyExit = NormalizeDouble(MathMax(bbL2, buyOpen+eTakeProfit*Point), Digits);  
          //double buyExit = NormalizeDouble(buyOpen+eTakeProfit*Point, Digits);  
          buyExit = 0;
@@ -260,24 +230,26 @@ int start()
       
       aceLog(gLogFileName, " No Buy Order Opened", gDoPrint, gDoLog);
   
-      if( prevOpen > prevClose && prevClose < bbL1 && prevClose > bbL2  && hasPendingSell == false)
-      {
-         double sellOpen = NormalizeDouble(Close[0], Digits);
-         double sellStop = NormalizeDouble(bbU1, Digits);
-         double sellExit = NormalizeDouble(MathMin(bbU2, sellOpen - eTakeProfit*Point), Digits);
-         //double sellExit = NormalizeDouble(sellOpen - eTakeProfit*Point, Digits);
-         sellExit = 0;      
-        double sellLot = aceCaculateLotsize(AccountBalance(), eRiskPerTrade, eStopLossBase, sellOpen, sellStop);
-        aceOrderSend(OP_SELLSTOP,sellLot,sellOpen,0,sellStop, sellExit,COMMENT,MAGIC,TimeCurrent()+60*60*1, Red);
-        hasPendingSell= true;  
-        string bbSellStatus = "[order][sellOpen"+"]" + sellOpen + 
-                             " [sellStop"+"]" + sellStop +
-                             " [sellExit"+"]" + sellExit +
-                             " [sellLot"+"]" + sellLot ;
-         aceLog(gLogFileName, bbSellStatus, gDoPrint, gDoLog);
-        return;   
-      }
-      aceLog(gLogFileName, " No SELL Order Opened", gDoPrint, gDoLog);
+      //if( prevOpen > prevClose && prevClose < bbL1 && prevClose > bbL2  && hasPendingSell == false
+      //  && fastMA2 > fastMA1 && cci_0 < cci_1
+      // )
+      //{
+      //   double sellOpen = NormalizeDouble(Close[0], Digits);
+      //   double sellStop = NormalizeDouble(bbU1, Digits);
+      //   double sellExit = NormalizeDouble(MathMin(bbU2, sellOpen - eTakeProfit*Point), Digits);
+      //   //double sellExit = NormalizeDouble(sellOpen - eTakeProfit*Point, Digits);
+      //   sellExit = 0;      
+      //  double sellLot = aceCaculateLotsize(AccountBalance(), eRiskPerTrade, eStopLossBase, sellOpen, sellStop);
+      //  aceOrderSend(OP_SELLSTOP,sellLot,sellOpen,0,sellStop, sellExit,COMMENT,MAGIC,TimeCurrent()+60*60*1, Red);
+      //  hasPendingSell= true;  
+      // string bbSellStatus = "[order][sellOpen"+"]" + sellOpen + 
+      //                       " [sellStop"+"]" + sellStop +
+      //                       " [sellExit"+"]" + sellExit +
+      //                       " [sellLot"+"]" + sellLot ;
+      //   aceLog(gLogFileName, bbSellStatus, gDoPrint, gDoLog);
+      //  return;   
+      //}
+      //aceLog(gLogFileName, " No SELL Order Opened", gDoPrint, gDoLog);
    }
    else
    {
