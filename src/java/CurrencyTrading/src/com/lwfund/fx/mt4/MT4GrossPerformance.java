@@ -10,6 +10,8 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	private int magicNumber;
 	private int periodType;
 	private Date eodDate;
+	private String accountID;
+	private String portfolioID;
 	
 	//MT4 official
 	private double profitFactor;
@@ -45,15 +47,25 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	private double totalPipsInJPY;
 	private double avgProfitPipsInJPY;
 	private double avgLossPipsInJPY;
+	private double balance;
+	private double deposit;
 	
 	//Additional
 	private double sharpeRatio;
 	private double ZScore;
 	private double riskFreeRate;
-	private double volatility;
+	private double hprvolatility;
 	private double avgLots;
 	private double defaultValueAtRisk;
+	private double hpr;
+	private double profitVolatility;
 	
+	public double getProfitVolatility() {
+		return profitVolatility;
+	}
+	public void setProfitVolatility(double profitVolatility) {
+		this.profitVolatility = profitVolatility;
+	}
 	public String getAlgoID() {
 		return algoID;
 	}
@@ -270,11 +282,11 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	public void setRiskFreeRate(double riskFreeRate) {
 		this.riskFreeRate = riskFreeRate;
 	}
-	public double getVolatility() {
-		return volatility;
+	public double getHprVolatility() {
+		return hprvolatility;
 	}
-	public void setVolatility(double volatility) {
-		this.volatility = volatility;
+	public void setHprVolatility(double hprvolatility) {
+		this.hprvolatility = hprvolatility;
 	}
 	public double getAvgLots() {
 		return avgLots;
@@ -311,5 +323,35 @@ public class MT4GrossPerformance extends ReflectionDBObject{
 	}
 	public void setAvgLossPipsInJPY(double avgLossPipsInJPY) {
 		this.avgLossPipsInJPY = avgLossPipsInJPY;
+	}
+	public String getAccountID() {
+		return accountID;
+	}
+	public void setAccountID(String accountID) {
+		this.accountID = accountID;
+	}
+	public String getPortfolioID() {
+		return portfolioID;
+	}
+	public void setPortfolioID(String portfolioID) {
+		this.portfolioID = portfolioID;
+	}
+	public double getBalance() {
+		return balance;
+	}
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+	public double getDeposit() {
+		return deposit;
+	}
+	public void setDeposit(double deposit) {
+		this.deposit = deposit;
+	}
+	public double getHpr() {
+		return hpr;
+	}
+	public void setHpr(double hpr) {
+		this.hpr = hpr;
 	}
 }

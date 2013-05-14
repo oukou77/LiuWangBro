@@ -28,9 +28,21 @@ public class MT4Constants {
 	public static final int REPORT_PERIOD_YTD = 1;
 	
 	public static final String PERFORMANCE_RPT_TYPE = "PerformanceReportType";
+	public static final String PERFORMANCE_RPT_HISTORY_GP_LIST = "HistoryGPList";
+	public static final String PERFORMANCE_RPT_IS_FORCE_FLAG = "IsForce";
+	public static final String PERFORMANCE_RPT_PORTFOLIO_ID = "PortfolioID";
+	
+	public static final String REFERENCED_RATE_PERIOD = "PeriodInDays";
 	
 	public static final String RESULTS_GROSS_PERFORMANCE = "GrossPerformance";
 	public static final String RESULTS_DRAWDOWN = "Drawdown";
+	public static final String RESULTS_RATIOS = "Ratios";
+	
+	public static final String GROSS_PERFORMANCE_PERIODTYPE_IN_MONGO = "PeriodType";
+	public static final String GROSS_PERFORMANCE_ALGOID_IN_MONGO = "AlgoID";
+	public static final String GROSS_PERFORMANCE_ACCOUNTID_IN_MONGO = "AccountID"; 
+	public static final String GROSS_PERFORMANCE_PORTFOLIOID_IN_MONGO = "PortfolioID";
+	public static final String GROSS_PERFORMANCE_EODDATE_IN_MONGO = "EodDate";
 	
 	public static final int MARKET_DATA_PRICE_TYPE_OPEN = 1;
 	public static final int MARKET_DATA_PRICE_TYPE_CLOSE = 2;
@@ -181,4 +193,11 @@ public class MT4Constants {
 	public static final String PERFORMANCE_RPT_TOTAL_PIPS = "totalPips";
 	public static final String PERFORMANCE_RPT_PROFIT_PIPS = "profitPips";
 	public static final String PERFORMANCE_RPT_LOSS_PIPS = "lossPips";
+	public static final String PERFORMANCE_RPT_BALANCE = "balance";
+	public static final String PERFORMANCE_RPT_HPR = "HPR";
+	public static final String PERFORMANCE_SHARPE_RATIO = "SharpeRatio";
+	public static final String PERFORMANCE_Z_SCORE = "ZScore";
+	public static final String PERFORMANCE_HPR_VOLATILITY = "HprVolatility";
+	public static final String PERFORMANCE_RISK_FREE_RATE = "RiskFreeRate";
+	
 }
