@@ -137,10 +137,17 @@ public class AlgoStatisticsCalculator implements MT4TradeCalculator {
 			default:
 				break;
 			}
-
-			double sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
-					/ denomFactor))
-					/ returnRateStats.getStandardDeviation();
+			
+			double sharpeRatio = 0;
+			
+			if(returnRateStats.getStandardDeviation() == 0){
+					sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
+						/ denomFactor));
+			}else{
+					sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
+						/ denomFactor))
+						/ returnRateStats.getStandardDeviation();				
+			}
 			
 			ret.put(MT4Constants.PERFORMANCE_SHARPE_RATIO, Double.toString(sharpeRatio));
 			ret.put(MT4Constants.PERFORMANCE_RPT_HPR, "1");
@@ -192,9 +199,16 @@ public class AlgoStatisticsCalculator implements MT4TradeCalculator {
 				break;
 			}
 
-			double sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
-					/ denomFactor))
-					/ returnRateStats.getStandardDeviation();
+			double sharpeRatio = 0;
+			
+			if(returnRateStats.getStandardDeviation() == 0){
+					sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
+						/ denomFactor));
+			}else{
+					sharpeRatio = (returnRateStats.getMean() - (1 + riskFreeRate
+						/ denomFactor))
+						/ returnRateStats.getStandardDeviation();				
+			}
 //for (int i = 0; i < returnRateStats.getValues().length; i++) {
 //	System.out.println(returnRateStats.getValues()[i]);
 //}

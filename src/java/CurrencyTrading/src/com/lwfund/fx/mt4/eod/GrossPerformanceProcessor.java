@@ -189,7 +189,7 @@ public class GrossPerformanceProcessor {
 	
 	public static void main(String args[]) throws Exception{
 		String from = "2012_06_27";
-		String to = "2013_04_25";
+		String to = "2012_07_26";
 		
 		GrossPerformanceProcessor gpp = new GrossPerformanceProcessor();
 		gpp.processForHoldingPeriod(from, to);
